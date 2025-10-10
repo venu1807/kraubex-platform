@@ -1,0 +1,2246 @@
+const AppointmentCalendarContent = () => {
+  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedTime, setSelectedTime] = useState('');
+  const [duration, setDuration] = useState('30');
+  const [supplierName, setSupplierName] = useState('');
+  const [supplierEmail, setSupplierEmail] = useState('');
+  const [meetingType, setMeetingType] = useState('contract');
+  const [meetingNotes, setMeetingNotes] = useState('');
+  const [shareToChat, setShareToChat] = useState(false);
+  const [repeatType, setRepeatType] = useState('none');
+  const [repeatEndDate, setRepeatEndDate] = useState('');
+  const [reminderTime, setReminderTime] = useState('15');
+  const [location, setLocation] = useState('');
+  const [priority, setPriority] = useState('medium');
+
+  const handleCreateAppointment = () => {
+    const appointmentData = {
+      supplierName,
+      supplierEmail,
+      meetingType,
+      date: selectedDate,
+      time: selectedTime,
+      duration: duration + ' minutes',
+      location,
+      notes: meetingNotes,
+      priority,
+      repeatType,
+      repeatEndDate: repeatType !== 'none' ? repeatEndDate : null,
+      reminderTime: reminderTime + ' minutes before',
+      shareToChat
+    };
+
+    alert('Appointment Created!\n' + JSON.stringify(appointmentData, null, 2));
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-xl border-2 border-indigo-200 p-6">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-indigo-500 to-blue-500 flex items-center justify-center">
+            <Calendar className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h3 className="text-xl font-bold" style={{color: COLORS.primary}}>Appointment Calendar</h3>
+            <p className="text-sm text-gray-600">Schedule meetings with suppliers - Advanced scheduling</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-xl border-2 border-gray-300 p-6">
+        <h4 className="text-lg font-bold mb-4" style={{color: COLORS.primary}}>Create New Appointment</h4>
+
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-2 text-gray-700">Supplier Name *</label>
+              <input
+                type="text"
+                value={supplierName}
+                onChange={(e) => setSupplierName(e.target.value)}
+                placeholder="Enter supplier name..."
+                className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2 text-gray-700">Supplier Email *</label>
+              <input
+                type="email"
+                value={supplierEmail}
+                onChange={(e) => setSupplierEmail(e.target.value)}
+                placeholder="supplier@example.com"
+                className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg outline-none"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-2 text-gray-700">Meeting Type</label>
+              <select
+                value={meetingType}
+                onChange={(e) => setMeetingType(e.target.value)}
+                className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg outline-none"
+              >
+                <option value="contract">Contract Discussion</option>
+                <option value="negotiation">Price Negotiation</option>
+                <option value="review">Performance Review</option>
+                <option value="onboarding">Supplier Onboarding</option>
+                <option value="audit">Compliance Audit</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2 text-gray-700">Priority</label>
+              <select
+                value={priority}
+                onChange={(e) => setPriority(e.target.value)}
+                className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg outline-none"
+              >
+                <option value="low">Low Priority</option>
+                <option value="medium">Medium Priority</option>
+                <option value="high">High Priority</option>
+                <option value="urgent">Urgent</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-2 text-gray-700">Date *</label>
+              <input
+                type="date"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+                className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2 text-gray-700">Time *</label>
+              <input
+                type="time"
+                value={selectedTime}
+                onChange={(e) => setSelectedTime(e.target.value)}
+                className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2 text-gray-700">Duration</label>
+              <select
+                value={duration}
+                onChange={(e) => setDuration(e.target.value)}
+                className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg outline-none"
+              >
+                <option value="15">15 minutes</option>
+                <option value="30">30 minutes</option>
+                <option value="45">45 minutes</option>
+                <option value="60">1 hour</option>
+                <option value="90">1.5 hours</option>
+                <option value="120">2 hours</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
+            <div className="flex items-center gap-2 mb-3">
+              <RotateCw className="w-4 h-4 text-purple-600" />
+              <h5 className="font-semibold text-gray-900 text-sm">Repetition Settings</h5>
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-2 text-gray-700">Repeat</label>
+                <select
+                  value={repeatType}
+                  onChange={(e) => setRepeatType(e.target.value)}
+                  className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg outline-none"
+                >
+                  <option value="none">Does not repeat</option>
+                  <option value="daily">Daily</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="biweekly">Bi-weekly</option>
+                  <option value="monthly">Monthly</option>
+                  <option value="quarterly">Quarterly</option>
+                </select>
+              </div>
+              {repeatType !== 'none' && (
+                <div>
+                  <label className="block text-sm font-medium mb-2 text-gray-700">Repeat Until</label>
+                  <input
+                    type="date"
+                    value={repeatEndDate}
+                    onChange={(e) => setRepeatEndDate(e.target.value)}
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg outline-none"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-2 text-gray-700">Location</label>
+              <input
+                type="text"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                placeholder="Office or video call link..."
+                className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg outline-none"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2 text-gray-700">Reminder</label>
+              <select
+                value={reminderTime}
+                onChange={(e) => setReminderTime(e.target.value)}
+                className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg outline-none"
+              >
+                <option value="5">5 minutes before</option>
+                <option value="15">15 minutes before</option>
+                <option value="30">30 minutes before</option>
+                <option value="60">1 hour before</option>
+                <option value="1440">1 day before</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2 text-gray-700">Meeting Notes</label>
+            <textarea
+              value={meetingNotes}
+              onChange={(e) => setMeetingNotes(e.target.value)}
+              placeholder="Add meeting agenda..."
+              className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg outline-none resize-none"
+              rows={4}
+            />
+          </div>
+
+          <div className="flex items-center gap-2 p-4 bg-blue-50 rounded-lg border border-blue-200">
+            <input
+              type="checkbox"
+              id="shareToChat"
+              checked={shareToChat}
+              onChange={(e) => setShareToChat(e.target.checked)}
+              className="w-4 h-4"
+            />
+            <label htmlFor="shareToChat" className="text-sm text-gray-700 cursor-pointer flex items-center gap-2">
+              <MessageCircle className="w-4 h-4 text-indigo-600" />
+              Share appointment in team chat
+            </label>
+          </div>
+
+          <div className="flex gap-3 pt-4">
+            <button
+              onClick={handleCreateAppointment}
+              className="flex-1 px-6 py-3 text-white rounded-lg hover:opacity-90 font-medium flex items-center justify-center gap-2"
+              style={{backgroundColor: COLORS.primary}}
+            >
+              <Calendar className="w-5 h-5" />
+              Create Appointment
+            </button>
+            <button className="px-6 py-3 bg-white border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium">
+              Clear
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-xl border-2 border-gray-300 p-6">
+        <h4 className="text-lg font-bold mb-4" style={{color: COLORS.primary}}>Upcoming Appointments</h4>
+        <div className="space-y-3">
+          {[
+            { supplier: 'SteelSphere GmbH', type: 'Contract Discussion', date: '2024-10-15', time: '10:00', status: 'scheduled', repeat: 'Weekly' },
+            { supplier: 'TechVision Solutions', type: 'Price Negotiation', date: '2024-10-18', time: '14:30', status: 'scheduled', repeat: 'None' },
+            { supplier: 'GreenEnergy Partners', type: 'Performance Review', date: '2024-10-22', time: '11:00', status: 'pending', repeat: 'Monthly' }
+          ].map((apt, i) => (
+            <div key={i} className="p-4 border-2 border-gray-200 rounded-lg hover:border-indigo-300 transition-colors">
+              <div className="flex items-start justify-between mb-2">
+                <div>
+                  <h5 className="font-semibold text-gray-900">{apt.supplier}</h5>
+                  <p className="text-sm text-gray-600">{apt.type}</p>
+                </div>
+                <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                  apt.status === 'scheduled' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
+                }`}>
+                  {apt.status}
+                </span>
+              </div>
+              <div className="flex items-center gap-4 text-sm text-gray-600 mb-2">
+                <div className="flex items-center gap-1">
+                  <Calendar className="w-4 h-4" />
+                  <span>{apt.date}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Clock className="w-4 h-4" />
+                  <span>{apt.time}</span>
+                </div>
+                {apt.repeat !== 'None' && (
+                  <div className="flex items-center gap-1">
+                    <RotateCw className="w-4 h-4" />
+                    <span>{apt.repeat}</span>
+                  </div>
+                )}
+              </div>
+              <div className="flex gap-2">
+                <button className="text-sm px-3 py-1 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200">
+                  View Details
+                </button>
+                <button className="text-sm px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 flex items-center gap-1">
+                  <MessageCircle className="w-3 h-3" />
+                  Share
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};import React, { useState, useCallback } from 'react';
+import {
+  Home,
+  Workflow,
+  Layers,
+  Search,
+  BarChart3,
+  Euro,
+  Package,
+  Shield,
+  Users,
+  MessageCircle,
+  Settings,
+  HelpCircle,
+  Bot,
+  Hand,
+  Zap,
+  Brain,
+  Target,
+  Database,
+  TrendingUp,
+  AlertTriangle,
+  FileText,
+  Calendar,
+  Clock,
+  Filter,
+  Eye,
+  Cpu,
+  PieChart,
+  MapPin,
+  FileCheck,
+  TrendingDown,
+  CheckSquare,
+  GitBranch,
+  MessageSquare,
+  Building,
+  Calculator,
+  Bell,
+  Lock,
+  ShieldCheck,
+  PlayCircle,
+  Ticket,
+  Send,
+  Sparkles,
+  ListFilter,
+  Grid3x3,
+  BarChart2,
+  Download,
+  Upload,
+  Plus,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Paperclip,
+  Mic,
+  Video,
+  Image,
+  File,
+  Rocket,
+  Star,
+  Activity,
+  Briefcase,
+  CheckCircle2,
+  Play,
+  Pause,
+  RotateCw,
+  Phone,
+  MicOff,
+  Smile,
+  Share2,
+  Trash2,
+  Mail,
+  ChevronDown,
+  ChevronUp,
+  Award,
+  ExternalLink
+} from 'lucide-react';
+import kraubexLogo from "./assets/kraubex-logo.png";
+
+const COLORS = {
+  primary: '#c04000',
+  background: '#efeee7',
+  text: '#292d32',
+  orange: '#c04000'
+};
+
+// Procurement Agents Data
+const procurementAgents = [
+  {
+    id: 'supplier-scout',
+    name: 'Supplier Scout',
+    icon: Search,
+    description: 'Finds and evaluates potential suppliers based on your criteria',
+    specialty: 'Supplier Discovery',
+    status: 'active',
+    tasksCompleted: 247,
+    rating: 4.8,
+    color: 'from-blue-500 to-cyan-500'
+  },
+  {
+    id: 'price-optimizer',
+    name: 'Price Optimizer',
+    icon: TrendingUp,
+    description: 'Analyzes market prices and suggests optimal pricing strategies',
+    specialty: 'Pricing Analysis',
+    status: 'active',
+    tasksCompleted: 189,
+    rating: 4.9,
+    color: 'from-green-500 to-emerald-500'
+  },
+  {
+    id: 'risk-guardian',
+    name: 'Risk Guardian',
+    icon: ShieldCheck,
+    description: 'Monitors supplier risks and compliance issues in real-time',
+    specialty: 'Risk Management',
+    status: 'active',
+    tasksCompleted: 312,
+    rating: 4.7,
+    color: 'from-red-500 to-orange-500'
+  },
+  {
+    id: 'order-orchestrator',
+    name: 'Order Orchestrator',
+    icon: Package,
+    description: 'Manages order tracking, logistics, and delivery optimization',
+    specialty: 'Order Management',
+    status: 'active',
+    tasksCompleted: 428,
+    rating: 4.6,
+    color: 'from-purple-500 to-pink-500'
+  },
+  {
+    id: 'analytics-wizard',
+    name: 'Analytics Wizard',
+    icon: BarChart3,
+    description: 'Generates insights and predictions from procurement data',
+    specialty: 'Data Analytics',
+    status: 'idle',
+    tasksCompleted: 156,
+    rating: 4.9,
+    color: 'from-indigo-500 to-purple-500'
+  },
+  {
+    id: 'contract-negotiator',
+    name: 'Contract Negotiator',
+    icon: FileText,
+    description: 'Assists with contract analysis and negotiation strategies',
+    specialty: 'Contract Management',
+    status: 'idle',
+    tasksCompleted: 93,
+    rating: 4.5,
+    color: 'from-yellow-500 to-orange-500'
+  },
+  {
+    id: 'appointment-agent',
+    name: 'Appointment Agent',
+    icon: Calendar,
+    description: 'Schedules meetings with suppliers and sends automated notifications',
+    specialty: 'Meeting Coordination',
+    status: 'active',
+    tasksCompleted: 178,
+    rating: 4.8,
+    color: 'from-pink-500 to-rose-500'
+  }
+];
+
+// Dummy Companies Data
+const dummyCompanies = [
+  {
+    id: 1,
+    name: 'SteelSphere GmbH',
+    industry: 'Steel Fabrication',
+    location: 'Dortmund, Germany',
+    size: '250+ employees',
+    rating: 4.8,
+    certifications: ['ISO 9001', 'ISO 14001'],
+    specialties: ['Custom Steel Products', 'Industrial Components'],
+    contact: 'info@steelsphere.de',
+    established: 1995
+  },
+  {
+    id: 2,
+    name: 'TechVision Solutions',
+    industry: 'Technology',
+    location: 'Munich, Germany',
+    size: '150-200 employees',
+    rating: 4.6,
+    certifications: ['ISO 27001', 'ISO 9001'],
+    specialties: ['IT Infrastructure', 'Cloud Services'],
+    contact: 'contact@techvision.de',
+    established: 2008
+  },
+  {
+    id: 3,
+    name: 'GreenEnergy Partners',
+    industry: 'Renewable Energy',
+    location: 'Hamburg, Germany',
+    size: '100-150 employees',
+    rating: 4.9,
+    certifications: ['ISO 50001', 'ISO 14001'],
+    specialties: ['Solar Solutions', 'Wind Energy'],
+    contact: 'info@greenenergy.de',
+    established: 2012
+  },
+  {
+    id: 4,
+    name: 'AutoParts Excellence',
+    industry: 'Automotive Manufacturing',
+    location: 'Stuttgart, Germany',
+    size: '300+ employees',
+    rating: 4.7,
+    certifications: ['IATF 16949', 'ISO 9001'],
+    specialties: ['Precision Parts', 'Assembly Components'],
+    contact: 'sales@autoparts.de',
+    established: 1988
+  },
+  {
+    id: 5,
+    name: 'BioTech Innovations',
+    industry: 'Biotechnology',
+    location: 'Berlin, Germany',
+    size: '50-100 employees',
+    rating: 4.5,
+    certifications: ['ISO 13485', 'GMP'],
+    specialties: ['Medical Devices', 'Lab Equipment'],
+    contact: 'research@biotech.de',
+    established: 2015
+  },
+  {
+    id: 6,
+    name: 'LogiChain Masters',
+    industry: 'Logistics & Supply Chain',
+    location: 'Frankfurt, Germany',
+    size: '200-250 employees',
+    rating: 4.4,
+    certifications: ['ISO 9001', 'ISO 28000'],
+    specialties: ['Warehouse Management', 'Transportation'],
+    contact: 'operations@logichain.de',
+    established: 2005
+  },
+  {
+    id: 7,
+    name: 'ChemPro Industries',
+    industry: 'Chemical Manufacturing',
+    location: 'Cologne, Germany',
+    size: '150-200 employees',
+    rating: 4.6,
+    certifications: ['ISO 9001', 'ISO 14001', 'REACH'],
+    specialties: ['Industrial Chemicals', 'Specialty Compounds'],
+    contact: 'sales@chempro.de',
+    established: 1992
+  },
+  {
+    id: 8,
+    name: 'PackTech Solutions',
+    industry: 'Packaging',
+    location: 'Düsseldorf, Germany',
+    size: '100-150 employees',
+    rating: 4.5,
+    certifications: ['ISO 9001', 'BRC'],
+    specialties: ['Custom Packaging', 'Sustainable Materials'],
+    contact: 'info@packtech.de',
+    established: 2010
+  }
+];
+
+const sidebarData = [
+  {
+    id: 'home',
+    title: 'Home',
+    icon: Home,
+    color: 'text-blue-600',
+    subItems: [
+      { id: 'overview-dashboard', title: 'Overview Dashboard', icon: BarChart3, type: 'manual', description: 'Key metrics & KPIs' },
+      { id: 'ai-insights-dashboard', title: 'AI Insights Dashboard', icon: Bot, type: 'agentic', description: 'Intelligent business insights' },
+      { id: 'recent-activities', title: 'Recent Activities', icon: Clock, type: 'manual', description: 'Latest actions & updates' },
+      { id: 'smart-notifications', title: 'Smart Notifications', icon: Brain, type: 'agentic', description: 'Contextual alerts & reminders' },
+      { id: 'quick-actions', title: 'Quick Actions', icon: Zap, type: 'manual', description: 'Frequently used functions' },
+      { id: 'personalized-workspace', title: 'Personalized Workspace', icon: Target, type: 'agentic', description: 'AI-customized interface' }
+    ]
+  },
+  {
+    id: 'suppliers',
+    title: 'Suppliers Search',
+    icon: Search,
+    color: 'text-orange-600',
+    subItems: [
+      { id: 'keyword-search', title: 'Keyword Search', icon: Search, type: 'manual', description: 'Search by company name, category' },
+      { id: 'semantic-search', title: 'Semantic Search', icon: Bot, type: 'agentic', description: 'Natural language queries' },
+      { id: 'advanced-filters', title: 'Advanced Filters', icon: Filter, type: 'manual', description: 'Location, industry, certification' },
+      { id: 'smart-matching', title: 'Smart Matching', icon: Target, type: 'agentic', description: 'AI-based supplier recommendations' },
+      { id: 'supplier-directory', title: 'Supplier Directory', icon: Database, type: 'manual', description: 'Browse categorized suppliers' },
+      { id: 'discovery-engine', title: 'Discovery Engine', icon: Zap, type: 'agentic', description: 'Find hidden supplier opportunities' }
+    ]
+  },
+  {
+    id: 'analytics',
+    title: 'Analytics',
+    icon: BarChart3,
+    color: 'text-purple-600',
+    subItems: [
+      { id: 'standard-reports', title: 'Standard Reports', icon: FileText, type: 'manual', description: 'Pre-built procurement reports' },
+      { id: 'ai-powered-analytics', title: 'AI-Powered Analytics', icon: Bot, type: 'agentic', description: 'Intelligent data analysis' },
+      { id: 'spend-analysis', title: 'Spend Analysis', icon: PieChart, type: 'manual', description: 'Cost breakdown & trends' },
+      { id: 'predictive-forecasting', title: 'Predictive Forecasting', icon: Brain, type: 'agentic', description: 'Future demand & pricing' },
+      { id: 'supplier-performance', title: 'Supplier Performance', icon: TrendingUp, type: 'manual', description: 'Rating & scorecards' },
+      { id: 'anomaly-detection', title: 'Anomaly Detection', icon: AlertTriangle, type: 'agentic', description: 'Unusual patterns & outliers' }
+    ]
+  },
+  {
+    id: 'pricing',
+    title: 'Smart Pricing',
+    icon: Euro,
+    color: 'text-green-600',
+    subItems: [
+      { id: 'quote-comparison', title: 'Quote Comparison', icon: BarChart3, type: 'manual', description: 'Side-by-side price analysis' },
+      { id: 'dynamic-pricing', title: 'Dynamic Pricing', icon: Bot, type: 'agentic', description: 'AI-optimized price suggestions' },
+      { id: 'cost-modeling', title: 'Cost Modeling', icon: Calculator, type: 'manual', description: 'Build custom pricing models' },
+      { id: 'market-intelligence', title: 'Market Intelligence', icon: Brain, type: 'agentic', description: 'Real-time market pricing' },
+      { id: 'negotiation-support', title: 'Negotiation Support', icon: Hand, type: 'manual', description: 'Tools for price negotiations' },
+      { id: 'optimal-pricing', title: 'Optimal Pricing', icon: Target, type: 'agentic', description: 'AI-recommended best prices' }
+    ]
+  },
+  {
+    id: 'orders',
+    title: 'Orders Status',
+    icon: Package,
+    color: 'text-blue-700',
+    subItems: [
+      { id: 'order-tracking', title: 'Order Tracking', icon: MapPin, type: 'manual', description: 'Real-time order status' },
+      { id: 'smart-logistics', title: 'Smart Logistics', icon: Bot, type: 'agentic', description: 'AI-optimized delivery routing' },
+      { id: 'delivery-schedule', title: 'Delivery Schedule', icon: Calendar, type: 'manual', description: 'Planned & actual deliveries' },
+      { id: 'predictive-delays', title: 'Predictive Delays', icon: Brain, type: 'agentic', description: 'Early warning system' },
+      { id: 'invoice-matching', title: 'Invoice Matching', icon: FileText, type: 'manual', description: '3-way matching process' },
+      { id: 'automated-reconciliation', title: 'Automated Reconciliation', icon: Zap, type: 'agentic', description: 'AI invoice processing' }
+    ]
+  },
+  {
+    id: 'risk',
+    title: 'Risk Monitoring',
+    icon: ShieldCheck,
+    color: 'text-red-600',
+    subItems: [
+      { id: 'supplier-audit', title: 'Supplier Audit', icon: FileCheck, type: 'manual', description: 'Manual compliance checks' },
+      { id: 'risk-scoring', title: 'Risk Scoring', icon: Bot, type: 'agentic', description: 'AI-based risk assessment' },
+      { id: 'compliance-tracking', title: 'Compliance Tracking', icon: ShieldCheck, type: 'manual', description: 'Certification monitoring' },
+      { id: 'threat-intelligence', title: 'Threat Intelligence', icon: Brain, type: 'agentic', description: 'External risk monitoring' },
+      { id: 'financial-health', title: 'Financial Health', icon: TrendingDown, type: 'manual', description: 'Credit & financial analysis' },
+      { id: 'early-warning', title: 'Early Warning System', icon: AlertTriangle, type: 'agentic', description: 'Predictive risk alerts' }
+    ]
+  },
+  {
+    id: 'team',
+    title: 'Team Workspace',
+    icon: Users,
+    color: 'text-indigo-600',
+    subItems: [
+      { id: 'team-dashboard', title: 'Team Dashboard', icon: Users, type: 'manual', description: 'Team performance & activities' },
+      { id: 'collaboration-ai', title: 'Collaboration AI', icon: Bot, type: 'agentic', description: 'Smart team coordination' },
+      { id: 'task-management', title: 'Task Management', icon: CheckSquare, type: 'manual', description: 'Assign & track tasks' },
+      { id: 'workflow-automation', title: 'Workflow Automation', icon: Brain, type: 'agentic', description: 'Intelligent process flows' },
+      { id: 'approval-workflows', title: 'Approval Workflows', icon: GitBranch, type: 'manual', description: 'Custom approval chains' },
+      { id: 'smart-delegation', title: 'Smart Delegation', icon: Target, type: 'agentic', description: 'AI-based task assignment' },
+      { id: 'appointment-calendar', title: 'Appointment Calendar', icon: Calendar, type: 'manual', description: 'Schedule supplier meetings' }
+    ]
+  },
+  {
+    id: 'ERP',
+    title: 'ERP Integration',
+    icon: Layers,
+    color: 'text-indigo-900',
+    subItems: [
+      { id: 'team-dashboard', title: 'Team Dashboard', icon: Users, type: 'manual', description: 'Team performance & activities' },
+      { id: 'collaboration-ai', title: 'Collaboration AI', icon: Bot, type: 'agentic', description: 'Smart team coordination' },
+      { id: 'task-management', title: 'Task Management', icon: CheckSquare, type: 'manual', description: 'Assign & track tasks' },
+      { id: 'workflow-automation', title: 'Workflow Automation', icon: Brain, type: 'agentic', description: 'Intelligent process flows' },
+      { id: 'approval-workflows', title: 'Approval Workflows', icon: GitBranch, type: 'manual', description: 'Custom approval chains' },
+      { id: 'smart-delegation', title: 'Smart Delegation', icon: Target, type: 'agentic', description: 'AI-based task assignment' },
+      { id: 'appointment-calendar', title: 'Appointment Calendar', icon: Calendar, type: 'manual', description: 'Schedule supplier meetings' }
+    ]
+  },
+  {
+    id: 'chat',
+    title: 'Chat',
+    icon: MessageCircle,
+    color: 'text-pink-600',
+    subItems: [
+      { id: 'direct-messaging', title: 'Direct Messaging', icon: MessageSquare, type: 'manual', description: 'One-on-one conversations' },
+      { id: 'ai-chat-assistant', title: 'AI Chat Assistant', icon: Bot, type: 'agentic', description: 'Intelligent chat support' },
+      { id: 'group-channels', title: 'Group Channels', icon: Users, type: 'manual', description: 'Team & project channels' },
+      { id: 'smart-responses', title: 'Smart Responses', icon: Brain, type: 'agentic', description: 'AI-suggested replies' },
+      { id: 'supplier-chat', title: 'Supplier Chat', icon: Building, type: 'manual', description: 'External supplier communication' },
+      { id: 'contextual-chat', title: 'Contextual Chat', icon: Cpu, type: 'agentic', description: 'Context-aware conversations' }
+    ]
+  }
+];
+
+const SupplierChatContent = ({ companyInfo }) => {
+  const [message, setMessage] = useState('');
+  const [showRFQModal, setShowRFQModal] = useState(false);
+  const [showRFQForm, setShowRFQForm] = useState(false);
+  const [showTemplatePreview, setShowTemplatePreview] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [isMuted, setIsMuted] = useState(false);
+
+  const companyName = companyInfo?.name || 'SteelSphere GmbH';
+  const companyInitials = companyInfo?.name ? companyInfo.name.split(' ').map(w => w[0]).join('').substring(0, 2) : 'SS';
+  const companyEmail = companyInfo?.contact || 'info@supplier.com';
+
+  const [messages, setMessages] = useState([
+    {
+      id: 1,
+      user: 'John Smith',
+      avatar: 'JS',
+      time: '2:30 PM',
+      text: `Hi! I am interested in your ${companyInfo?.industry || 'steel fabrication'} services.`,
+      isOwn: false
+    },
+    {
+      id: 2,
+      user: 'You',
+      avatar: 'YU',
+      time: '2:32 PM',
+      text: 'Hello! We would be happy to help. What kind of project are you working on?',
+      isOwn: true
+    }
+  ]);
+
+  const [rfqForm, setRfqForm] = useState({
+    type: '',
+    projectName: '',
+    description: '',
+    quantity: '',
+    deadline: '',
+    budget: '',
+    location: '',
+    components: [
+      { id: 1, name: '', description: '', quantity: '', specifications: '' }
+    ],
+    requiredDocs: [],
+    attachedFiles: []
+  });
+
+  const rfqTemplates = [
+    { id: 'steel-fab', name: 'Steel Fabrication', icon: Package, color: 'bg-blue-500' },
+    { id: 'raw-materials', name: 'Raw Materials', icon: Package, color: 'bg-green-500' },
+    { id: 'custom-project', name: 'Custom Project', icon: FileText, color: 'bg-purple-500' },
+    { id: 'maintenance', name: 'Maintenance Service', icon: FileText, color: 'bg-orange-500' }
+  ];
+
+  const templateData = {
+    'steel-fab': {
+      projectName: 'Industrial Warehouse Framework',
+      description: 'Custom steel framework for warehouse facility',
+      quantity: '50 tons structural steel',
+      deadline: '2024-12-15',
+      budget: '75000 - 95000 EUR',
+      location: 'Munich, Germany',
+      specifications: 'Grade S355 steel, galvanized finish',
+      components: [
+        { id: 1, name: 'Structural Beams', description: 'Main beams', quantity: '25 units', specifications: 'IPE 300, S355 grade' },
+        { id: 2, name: 'Roof Trusses', description: 'Pre-fabricated trusses', quantity: '15 units', specifications: 'Custom design, 20m span' }
+      ],
+      requiredDocs: ['Structural drawings', 'Load calculations', 'Material certificates']
+    },
+    'raw-materials': {
+      projectName: 'Steel Plates Supply',
+      description: 'High-grade steel plates for construction',
+      quantity: '200 steel plates',
+      deadline: '2024-11-30',
+      budget: '45000 - 60000 EUR',
+      location: 'Berlin, Germany',
+      components: [
+        { id: 1, name: 'Steel Plates 10mm', description: 'Structural plates', quantity: '80 plates', specifications: '2000x1000mm, S355 grade' }
+      ],
+      requiredDocs: ['Technical drawings', 'Quality certificates']
+    }
+  };
+
+  const handleSendMessage = () => {
+    if (message.trim()) {
+      const newMessage = {
+        id: messages.length + 1,
+        user: 'You',
+        avatar: 'YU',
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        text: message,
+        isOwn: true
+      };
+      setMessages([...messages, newMessage]);
+      setMessage('');
+    }
+  };
+
+  const handleCreateRFQ = (templateId) => {
+    const template = rfqTemplates.find(t => t.id === templateId);
+    setSelectedTemplate(templateId);
+    setRfqForm({
+      ...rfqForm,
+      type: template.name
+    });
+    setShowRFQModal(false);
+    setShowTemplatePreview(true);
+  };
+
+  const handleUseTemplate = () => {
+    const templateInfo = templateData[selectedTemplate];
+    if (templateInfo) {
+      setRfqForm({
+        ...rfqForm,
+        ...templateInfo
+      });
+    }
+    setShowTemplatePreview(false);
+    setShowRFQForm(true);
+  };
+
+  const handleShareRFQ = () => {
+    const rfqMessage = {
+      id: messages.length + 1,
+      user: 'You',
+      avatar: 'YU',
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      isOwn: true,
+      isRFQ: true,
+      rfqData: { ...rfqForm }
+    };
+    setMessages([...messages, rfqMessage]);
+    setShowRFQForm(false);
+    setRfqForm({
+      type: '',
+      projectName: '',
+      description: '',
+      quantity: '',
+      deadline: '',
+      budget: '',
+      location: '',
+      components: [
+        { id: 1, name: '', description: '', quantity: '', specifications: '' }
+      ],
+      requiredDocs: [],
+      attachedFiles: []
+    });
+  };
+
+  return (
+    <div className="bg-white shadow-lg rounded-lg overflow-hidden" style={{height: '100%', display: 'flex', flexDirection: 'column'}}>
+      <div className="bg-gray-50 border-b px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-red-600 rounded text-white flex items-center justify-center text-sm font-semibold">
+            {companyInitials}
+          </div>
+          <div>
+            <h3 className="font-semibold text-gray-900">{companyName}</h3>
+            <p className="text-xs text-green-600">● Online</p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button className="p-2 hover:bg-gray-200 rounded transition-colors">
+            <Phone className="w-4 h-4 text-gray-600" />
+          </button>
+          <button className="p-2 hover:bg-gray-200 rounded transition-colors">
+            <Video className="w-4 h-4 text-gray-600" />
+          </button>
+          <button
+            className={`p-2 hover:bg-gray-200 rounded transition-colors ${isMuted ? 'bg-red-100' : ''}`}
+            onClick={() => setIsMuted(!isMuted)}
+          >
+            {isMuted ? <MicOff className="w-4 h-4 text-red-600" /> : <Mic className="w-4 h-4 text-gray-600" />}
+          </button>
+        </div>
+      </div>
+
+      <div className="flex-1 overflow-y-auto p-4" style={{backgroundColor: '#efeee7'}}>
+        {messages.map((msg) => (
+          <div key={msg.id} className={`flex gap-3 mb-4 ${msg.isOwn ? 'flex-row-reverse' : ''}`}>
+            <div className={`w-8 h-8 rounded flex items-center justify-center text-sm font-semibold ${
+              msg.isOwn ? 'bg-blue-600 text-white' : 'bg-gray-400 text-white'
+            }`}>
+              {msg.avatar}
+            </div>
+
+            <div className={`flex-1 max-w-xs ${msg.isOwn ? 'text-right' : ''}`}>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-sm font-semibold text-gray-900">{msg.user}</span>
+                <span className="text-xs text-gray-500">{msg.time}</span>
+              </div>
+
+              {msg.isRFQ ? (
+                <div className={`p-3 rounded-lg border ${msg.isOwn ? 'bg-blue-50 border-blue-200' : 'bg-gray-50 border-gray-200'}`}>
+                  <div className="flex items-center gap-2 mb-2">
+                    <FileText className="w-4 h-4 text-blue-600" />
+                    <span className="font-semibold text-blue-600">RFQ: {msg.rfqData.type}</span>
+                  </div>
+                  <div className="text-sm space-y-1">
+                    <p><strong>Project:</strong> {msg.rfqData.projectName}</p>
+                    <p><strong>Description:</strong> {msg.rfqData.description}</p>
+                    <p><strong>Components:</strong> {msg.rfqData.components?.length || 0} items</p>
+                    <p><strong>Required Docs:</strong> {msg.rfqData.requiredDocs?.length || 0} documents</p>
+                  </div>
+                  <button className="mt-2 px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition-colors">
+                    View Details
+                  </button>
+                </div>
+              ) : (
+                <div className={`p-3 rounded-lg ${
+                  msg.isOwn ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-900'
+                }`}>
+                  {msg.text}
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="border-t p-4">
+        <div className="flex items-center gap-3">
+          <button
+            className="p-2 hover:bg-gray-100 rounded transition-colors"
+            onClick={() => setShowRFQModal(true)}
+          >
+            <Plus className="w-5 h-5 text-gray-600" />
+          </button>
+
+          <button className="p-2 hover:bg-gray-100 rounded transition-colors">
+            <Paperclip className="w-5 h-5 text-gray-600" />
+          </button>
+
+          <div className="flex-1 relative">
+            <input
+              type="text"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+              placeholder="Type a message..."
+              className="w-full px-3 py-2 border rounded-lg outline-none"
+            />
+          </div>
+
+          <button
+            onClick={handleSendMessage}
+            className="p-2 rounded transition-colors"
+            style={{backgroundColor: COLORS.primary}}
+          >
+            <Send className="w-5 h-5 text-white" />
+          </button>
+        </div>
+      </div>
+
+      {showRFQModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold">Select RFQ Template</h3>
+              <button onClick={() => setShowRFQModal(false)}>
+                <X className="w-5 h-5 text-gray-500" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 mb-6">
+              {rfqTemplates.map((template) => (
+                <button
+                  key={template.id}
+                  onClick={() => handleCreateRFQ(template.id)}
+                  className="flex flex-col items-center gap-2 p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  <div className={`w-8 h-8 rounded flex items-center justify-center ${template.color}`}>
+                    {React.createElement(template.icon, { className: 'w-4 h-4 text-white' })}
+                  </div>
+                  <span className="text-sm font-medium text-center">{template.name}</span>
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => {
+                setShowRFQModal(false);
+                setShowRFQForm(true);
+              }}
+              className="w-full px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
+            >
+              Create Blank RFQ
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showTemplatePreview && selectedTemplate && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg w-full max-w-2xl mx-4 max-h-[80vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-4 border-b">
+              <h3 className="text-lg font-semibold">Template Preview</h3>
+              <button onClick={() => setShowTemplatePreview(false)}>
+                <X className="w-5 h-5 text-gray-500" />
+              </button>
+            </div>
+
+            <div className="p-6">
+              {templateData[selectedTemplate] && (
+                <div className="space-y-4">
+                  <div className="bg-blue-50 p-4 rounded">
+                    <h4 className="font-semibold mb-2">{templateData[selectedTemplate].projectName}</h4>
+                    <p className="text-sm mb-2">{templateData[selectedTemplate].description}</p>
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div><strong>Location:</strong> {templateData[selectedTemplate].location}</div>
+                      <div><strong>Budget:</strong> {templateData[selectedTemplate].budget}</div>
+                      <div><strong>Deadline:</strong> {templateData[selectedTemplate].deadline}</div>
+                      <div><strong>Quantity:</strong> {templateData[selectedTemplate].quantity}</div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h4 className="font-semibold mb-2">Components ({templateData[selectedTemplate].components.length})</h4>
+                    {templateData[selectedTemplate].components.map((comp, index) => (
+                      <div key={index} className="bg-gray-50 p-3 rounded mb-2">
+                        <h5 className="font-medium">{comp.name} - {comp.quantity}</h5>
+                        <p className="text-sm text-gray-600">{comp.description}</p>
+                        <p className="text-xs text-gray-500">{comp.specifications}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div>
+                    <h4 className="font-semibold mb-2">Required Documents</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {templateData[selectedTemplate].requiredDocs.map((doc, index) => (
+                        <span key={index} className="px-2 py-1 bg-yellow-100 text-sm rounded">
+                          {doc}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="flex gap-3 p-4 border-t">
+              <button
+                onClick={() => {
+                  setShowTemplatePreview(false);
+                  setShowRFQForm(true);
+                }}
+                className="flex-1 px-4 py-2 border border-gray-300 rounded hover:bg-gray-50"
+              >
+                Create Blank RFQ
+              </button>
+              <button
+                onClick={handleUseTemplate}
+                className="flex-1 px-4 py-2 text-white rounded"
+                style={{backgroundColor: COLORS.primary}}
+              >
+                Use This Template
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showRFQForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between p-4 border-b">
+              <h3 className="text-lg font-semibold">Create RFQ</h3>
+              <button onClick={() => setShowRFQForm(false)}>
+                <X className="w-5 h-5 text-gray-500" />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Project Name</label>
+                <input
+                  type="text"
+                  value={rfqForm.projectName}
+                  onChange={(e) => setRfqForm({...rfqForm, projectName: e.target.value})}
+                  className="w-full px-3 py-2 border rounded outline-none"
+                  placeholder="Enter project name"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-1">Description</label>
+                <textarea
+                  value={rfqForm.description}
+                  onChange={(e) => setRfqForm({...rfqForm, description: e.target.value})}
+                  className="w-full px-3 py-2 border rounded outline-none"
+                  rows={3}
+                  placeholder="Project description..."
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">Budget</label>
+                  <input
+                    type="text"
+                    value={rfqForm.budget}
+                    onChange={(e) => setRfqForm({...rfqForm, budget: e.target.value})}
+                    className="w-full px-3 py-2 border rounded outline-none"
+                    placeholder="Budget range"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-1">Location</label>
+                  <input
+                    type="text"
+                    value={rfqForm.location}
+                    onChange={(e) => setRfqForm({...rfqForm, location: e.target.value})}
+                    className="w-full px-3 py-2 border rounded outline-none"
+                    placeholder="Project location"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-3 p-4 border-t">
+              <button
+                onClick={() => setShowRFQForm(false)}
+                className="flex-1 px-4 py-2 border border-gray-300 rounded hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleShareRFQ}
+                className="flex-1 px-4 py-2 text-white rounded"
+                style={{backgroundColor: COLORS.primary}}
+              >
+                Share RFQ
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const bottomItems = [
+  {
+    id: 'settings',
+    title: 'Settings',
+    icon: Settings,
+    color: 'text-gray-600',
+    subItems: [
+      { id: 'user-preferences', title: 'User Preferences', icon: Settings, type: 'manual', description: 'Personal settings & preferences' },
+      { id: 'ai-personalization', title: 'AI Personalization', icon: Bot, type: 'agentic', description: 'Smart interface customization' },
+      { id: 'notification-settings', title: 'Notification Settings', icon: Bell, type: 'manual', description: 'Alert & reminder preferences' },
+      { id: 'smart-defaults', title: 'Smart Defaults', icon: Brain, type: 'agentic', description: 'AI-optimized default settings' }
+    ]
+  },
+  {
+    id: 'help',
+    title: 'Help',
+    icon: HelpCircle,
+    color: 'text-gray-600',
+    subItems: [
+      { id: 'documentation', title: 'Documentation', icon: FileText, type: 'manual', description: 'User guides & tutorials' },
+      { id: 'ai-help-assistant', title: 'AI Help Assistant', icon: Bot, type: 'agentic', description: 'Intelligent help chatbot' },
+      { id: 'video-tutorials', title: 'Video Tutorials', icon: PlayCircle, type: 'manual', description: 'Step-by-step video guides' },
+      { id: 'contextual-help', title: 'Contextual Help', icon: Brain, type: 'agentic', description: 'Smart in-app guidance' }
+    ]
+  }
+];
+
+const ManualSearchContent = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedIndustry, setSelectedIndustry] = useState('All Industries');
+  const [selectedLocation, setSelectedLocation] = useState('All Locations');
+  const [selectedSize, setSelectedSize] = useState('Any Size');
+  const [filteredCompanies, setFilteredCompanies] = useState(dummyCompanies);
+  const [selectedCompany, setSelectedCompany] = useState(null);
+  const [showChat, setShowChat] = useState(false);
+  const [showCompanyDetails, setShowCompanyDetails] = useState(false);
+  const [expandedSections, setExpandedSections] = useState({
+    products: false,
+    certifications: false,
+    notes: false
+  });
+
+  const handleSearch = () => {
+    let results = dummyCompanies;
+
+    if (searchQuery.trim()) {
+      results = results.filter(company =>
+        company.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        company.industry.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        company.specialties.some(s => s.toLowerCase().includes(searchQuery.toLowerCase()))
+      );
+    }
+
+    if (selectedIndustry !== 'All Industries') {
+      results = results.filter(company => company.industry === selectedIndustry);
+    }
+
+    if (selectedLocation !== 'All Locations') {
+      results = results.filter(company => company.location.includes(selectedLocation));
+    }
+
+    if (selectedSize !== 'Any Size') {
+      results = results.filter(company => company.size === selectedSize);
+    }
+
+    setFilteredCompanies(results);
+  };
+
+  const handleContactCompany = (company) => {
+    setSelectedCompany(company);
+    setShowChat(true);
+  };
+
+  const handleViewDetails = (company) => {
+    setSelectedCompany(company);
+    setShowCompanyDetails(true);
+    setExpandedSections({ products: false, certifications: false, notes: false });
+  };
+
+  const toggleSection = (section) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-white rounded-xl border-2 border-gray-300 p-6">
+        <label className="block text-sm font-medium mb-2" style={{color: COLORS.primary}}>
+          Search Keywords
+        </label>
+        <div className="flex gap-3">
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Enter company name, industry, or keywords..."
+            className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:border-gray-400 outline-none"
+          />
+          <button
+            onClick={handleSearch}
+            className="px-6 py-3 bg-white border-2 text-white rounded-lg hover:opacity-90 transition-opacity font-medium flex items-center gap-2"
+            style={{backgroundColor: COLORS.primary, borderColor: COLORS.primary}}
+          >
+            <Search className="w-5 h-5" />
+            Search
+          </button>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-xl border-2 border-gray-300 p-6">
+        <h3 className="text-lg font-bold mb-4 flex items-center gap-2" style={{color: COLORS.primary}}>
+          <ListFilter className="w-5 h-5" />
+          Advanced Filters
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2 text-gray-700">Industry</label>
+            <select
+              value={selectedIndustry}
+              onChange={(e) => setSelectedIndustry(e.target.value)}
+              className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:border-gray-400 outline-none"
+            >
+              <option>All Industries</option>
+              <option>Steel Fabrication</option>
+              <option>Technology</option>
+              <option>Renewable Energy</option>
+              <option>Automotive Manufacturing</option>
+              <option>Biotechnology</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2 text-gray-700">Location</label>
+            <select
+              value={selectedLocation}
+              onChange={(e) => setSelectedLocation(e.target.value)}
+              className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:border-gray-400 outline-none"
+            >
+              <option>All Locations</option>
+              <option>Germany</option>
+              <option>Dortmund</option>
+              <option>Munich</option>
+              <option>Hamburg</option>
+              <option>Stuttgart</option>
+              <option>Berlin</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2 text-gray-700">Company Size</label>
+            <select
+              value={selectedSize}
+              onChange={(e) => setSelectedSize(e.target.value)}
+              className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:border-gray-400 outline-none"
+            >
+              <option>Any Size</option>
+              <option>50-100 employees</option>
+              <option>100-150 employees</option>
+              <option>150-200 employees</option>
+              <option>200-250 employees</option>
+              <option>250+ employees</option>
+              <option>300+ employees</option>
+            </select>
+          </div>
+        </div>
+        <div className="mt-4 flex gap-3">
+          <button
+            onClick={handleSearch}
+            className="px-4 py-2 border-2 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
+            style={{borderColor: COLORS.primary, color: COLORS.primary}}
+          >
+            <Filter className="w-4 h-4" />
+            Apply Filters
+          </button>
+          <button
+            onClick={() => {
+              setSearchQuery('');
+              setSelectedIndustry('All Industries');
+              setSelectedLocation('All Locations');
+              setSelectedSize('Any Size');
+              setFilteredCompanies(dummyCompanies);
+            }}
+            className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+          >
+            Clear All
+          </button>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-xl border-2 border-gray-300 p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-bold" style={{color: COLORS.primary}}>
+            Search Results ({filteredCompanies.length})
+          </h3>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-600">View:</span>
+            <button className="p-2 rounded hover:bg-gray-100"><Grid3x3 className="w-4 h-4" /></button>
+            <button className="p-2 rounded hover:bg-gray-100"><BarChart2 className="w-4 h-4" /></button>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {filteredCompanies.map((company) => (
+            <div key={company.id} className="border-2 border-gray-200 rounded-lg p-4 hover:border-gray-400 transition-colors">
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex-1">
+                  <h4 className="font-semibold text-gray-900 mb-1">{company.name}</h4>
+                  <p className="text-sm text-gray-600 mb-2">{company.industry} • {company.location}</p>
+                  <div className="flex items-center gap-2 mb-2">
+                    <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                    <span className="text-sm font-medium text-gray-700">{company.rating}</span>
+                    <span className="text-xs text-gray-500">• {company.size}</span>
+                  </div>
+                  <div className="flex flex-wrap gap-1 mb-2">
+                    {company.certifications.map((cert, i) => (
+                      <span key={i} className="px-2 py-0.5 bg-green-100 text-green-700 text-[10px] rounded-full font-medium">
+                        {cert}
+                      </span>
+                    ))}
+                  </div>
+                  <p className="text-xs text-gray-600">
+                    <strong>Specialties:</strong> {company.specialties.join(', ')}
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleViewDetails(company)}
+                  className="text-sm px-4 py-2 rounded-lg hover:opacity-90 flex-1"
+                  style={{backgroundColor: COLORS.primary, color: 'white'}}
+                >
+                  View Details
+                </button>
+                <button
+                  onClick={() => handleContactCompany(company)}
+                  className="text-sm px-4 py-2 rounded-lg border-2 hover:bg-gray-50 flex items-center gap-1"
+                  style={{borderColor: COLORS.primary, color: COLORS.primary}}
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  Contact
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {showChat && selectedCompany && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg w-full max-w-4xl mx-4" style={{height: '80vh'}}>
+            <div className="flex items-center justify-between p-4 border-b">
+              <h3 className="text-lg font-semibold">Chat with {selectedCompany.name}</h3>
+              <button onClick={() => setShowChat(false)}>
+                <X className="w-5 h-5 text-gray-500" />
+              </button>
+            </div>
+            <div style={{height: 'calc(100% - 60px)'}}>
+              <SupplierChatContent companyInfo={selectedCompany} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showCompanyDetails && selectedCompany && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-y-auto">
+            <div className="sticky top-0 bg-white border-b p-4 flex items-center justify-between rounded-t-2xl z-10">
+              <h3 className="text-xl font-bold" style={{color: COLORS.primary}}>Company Details</h3>
+              <button onClick={() => setShowCompanyDetails(false)} className="p-2 hover:bg-gray-100 rounded-full">
+                <X className="w-5 h-5 text-gray-500" />
+              </button>
+            </div>
+
+            <div className="p-8">
+              <div className="text-center mb-8">
+                <h1 className="text-4xl font-bold mb-4" style={{color: COLORS.primary}}>{selectedCompany.name}</h1>
+                <div className="flex justify-center items-center gap-1 mb-2">
+                  {[...Array(Math.floor(selectedCompany.rating))].map((_, i) => (
+                    <Star key={i} className="w-7 h-7 text-yellow-400 fill-yellow-400" />
+                  ))}
+                  {selectedCompany.rating % 1 !== 0 && (
+                    <Star className="w-7 h-7 text-cyan-500 fill-cyan-500" />
+                  )}
+                </div>
+                <div className="text-lg">
+                  <span className="font-bold text-purple-700">{selectedCompany.rating}</span>
+                  <span className="ml-1">(47 reviews)</span>
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-8 mb-8">
+                <div className="bg-gradient-to-br from-pink-50 to-purple-50 rounded-2xl p-6 border border-pink-200">
+                  <h2 className="text-2xl font-bold mb-6" style={{color: COLORS.primary}}>Company Overview</h2>
+                  <div className="space-y-4">
+                    <div className="text-center">
+                      <span className="font-semibold" style={{color: COLORS.primary}}>Founded:</span>
+                      <span className="ml-2">{selectedCompany.established}</span>
+                    </div>
+                    <div className="text-center">
+                      <span className="font-semibold" style={{color: COLORS.primary}}>Headquarters:</span>
+                      <span className="ml-2">{selectedCompany.location}</span>
+                    </div>
+                    <div className="text-center">
+                      <span className="font-semibold" style={{color: COLORS.primary}}>Industry:</span>
+                      <span className="ml-2">{selectedCompany.industry}</span>
+                    </div>
+                    <div className="text-center">
+                      <span className="font-semibold" style={{color: COLORS.primary}}>Number of Employees:</span>
+                      <span className="ml-2">{selectedCompany.size}</span>
+                    </div>
+                    <div className="text-center">
+                      <span className="font-semibold" style={{color: COLORS.primary}}>Annual Revenue:</span>
+                      <span className="ml-2">€{selectedCompany.id * 2}M (FY 2023)</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-br from-cyan-50 to-blue-50 rounded-2xl p-6 border border-cyan-200">
+                  <h2 className="text-2xl font-bold mb-6" style={{color: COLORS.primary}}>Contact Information</h2>
+                  <div className="space-y-4">
+                    <div className="text-center">
+                      <div className="font-semibold mb-2" style={{color: COLORS.primary}}>Address:</div>
+                      <div>{selectedCompany.location}</div>
+                    </div>
+                    <div className="text-center">
+                      <a href="#" className="text-cyan-600 hover:text-cyan-800 underline font-medium transition-colors">
+                        www.{selectedCompany.name.toLowerCase().replace(/\s+/g, '')}.de
+                      </a>
+                    </div>
+                    <div className="flex justify-center items-center gap-2">
+                      <Phone className="w-5 h-5 text-green-500" />
+                      <span>+49 {selectedCompany.id}234567890</span>
+                    </div>
+                    <div className="flex justify-center items-center gap-2">
+                      <Mail className="w-5 h-5 text-orange-500" />
+                      <span>{selectedCompany.contact}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl p-4 border border-emerald-200">
+                  <div
+                    className="flex items-center gap-3 text-emerald-700 cursor-pointer hover:text-emerald-800 transition-colors"
+                    onClick={() => toggleSection('products')}
+                  >
+                    <Building className="w-5 h-5 text-emerald-500" />
+                    <span className="font-semibold text-lg">Products and Services</span>
+                    {expandedSections.products ?
+                      <ChevronUp className="w-5 h-5 ml-auto text-emerald-600" /> :
+                      <ChevronDown className="w-5 h-5 ml-auto text-emerald-600" />
+                    }
+                  </div>
+                  {expandedSections.products && (
+                    <div className="mt-4 pl-8 space-y-3">
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div>
+                          <h4 className="font-semibold mb-2" style={{color: COLORS.primary}}>Core Services:</h4>
+                          <ul className="list-disc list-inside space-y-1 text-sm mb-3">
+                            {selectedCompany.specialties.map((spec, i) => (
+                              <li key={i}>{spec}</li>
+                            ))}
+                          </ul>
+                          <div className="bg-gray-50 p-3 rounded-lg border">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Image className="w-4 h-4 text-emerald-600" />
+                              <span className="text-xs font-medium" style={{color: COLORS.primary}}>Project Gallery:</span>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2">
+                              <div className="bg-emerald-100 h-16 rounded flex items-center justify-center text-xs text-emerald-700 border border-emerald-200">
+                                Recent Project<br/>Portfolio
+                              </div>
+                              <div className="bg-emerald-100 h-16 rounded flex items-center justify-center text-xs text-emerald-700 border border-emerald-200">
+                                Client Success<br/>Stories
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-2" style={{color: COLORS.primary}}>Industry Solutions:</h4>
+                          <ul className="list-disc list-inside space-y-1 text-sm mb-3">
+                            <li>Custom manufacturing solutions</li>
+                            <li>Quality assurance services</li>
+                            <li>Technical consultation</li>
+                            <li>24/7 customer support</li>
+                          </ul>
+                          <div className="bg-gray-50 p-3 rounded-lg border">
+                            <div className="flex items-center gap-2 mb-2">
+                              <FileText className="w-4 h-4 text-emerald-600" />
+                              <span className="text-xs font-medium" style={{color: COLORS.primary}}>Documentation:</span>
+                            </div>
+                            <div className="space-y-2">
+                              <div className="flex items-center justify-between text-xs p-2 bg-white rounded border">
+                                <span>Product Catalog.pdf</span>
+                                <ExternalLink className="w-3 h-3 text-emerald-600 cursor-pointer" />
+                              </div>
+                              <div className="flex items-center justify-between text-xs p-2 bg-white rounded border">
+                                <span>Technical Specs.pdf</span>
+                                <ExternalLink className="w-3 h-3 text-emerald-600 cursor-pointer" />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-4 border border-amber-200">
+                  <div
+                    className="flex items-center gap-3 text-amber-700 cursor-pointer hover:text-amber-800 transition-colors"
+                    onClick={() => toggleSection('certifications')}
+                  >
+                    <Award className="w-5 h-5 text-amber-500" />
+                    <span className="font-semibold text-lg">Certifications and Compliance</span>
+                    {expandedSections.certifications ?
+                      <ChevronUp className="w-5 h-5 ml-auto text-amber-600" /> :
+                      <ChevronDown className="w-5 h-5 ml-auto text-amber-600" />
+                    }
+                  </div>
+                  {expandedSections.certifications && (
+                    <div className="mt-4 pl-8 space-y-3">
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div>
+                          <h4 className="font-semibold mb-2" style={{color: COLORS.primary}}>Quality Standards:</h4>
+                          <ul className="list-disc list-inside space-y-1 text-sm mb-3">
+                            {selectedCompany.certifications.map((cert, i) => (
+                              <li key={i}>{cert} Certified</li>
+                            ))}
+                          </ul>
+                          <div className="bg-gray-50 p-3 rounded-lg border">
+                            <div className="flex items-center gap-2 mb-2">
+                              <FileText className="w-4 h-4 text-amber-600" />
+                              <span className="text-xs font-medium" style={{color: COLORS.primary}}>Certificates:</span>
+                            </div>
+                            <div className="space-y-2">
+                              {selectedCompany.certifications.map((cert, i) => (
+                                <div key={i} className="flex items-center justify-between text-xs p-2 bg-white rounded border">
+                                  <span>{cert}_Certificate.pdf</span>
+                                  <ExternalLink className="w-3 h-3 text-amber-600 cursor-pointer" />
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-2" style={{color: COLORS.primary}}>Safety & Environment:</h4>
+                          <ul className="list-disc list-inside space-y-1 text-sm mb-3">
+                            <li>Occupational Health & Safety</li>
+                            <li>Environmental Management</li>
+                            <li>Sustainability Initiative</li>
+                          </ul>
+                          <div className="bg-gray-50 p-3 rounded-lg border">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Image className="w-4 h-4 text-amber-600" />
+                              <span className="text-xs font-medium" style={{color: COLORS.primary}}>Documentation:</span>
+                            </div>
+                            <div className="grid grid-cols-1 gap-2">
+                              <div className="bg-amber-100 h-12 rounded flex items-center justify-center text-xs text-amber-700 border border-amber-200">
+                                Safety Audit Report 2024
+                              </div>
+                              <div className="flex items-center justify-between text-xs p-2 bg-white rounded border">
+                                <span>Compliance_Report.pdf</span>
+                                <ExternalLink className="w-3 h-3 text-amber-600 cursor-pointer" />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="bg-gradient-to-r from-violet-50 to-purple-50 rounded-xl p-4 border border-violet-200">
+                  <div
+                    className="flex items-center gap-3 text-violet-700 cursor-pointer hover:text-violet-800 transition-colors"
+                    onClick={() => toggleSection('notes')}
+                  >
+                    <FileText className="w-5 h-5 text-violet-500" />
+                    <span className="font-semibold text-lg">Additional Notes</span>
+                    {expandedSections.notes ?
+                      <ChevronUp className="w-5 h-5 ml-auto text-violet-600" /> :
+                      <ChevronDown className="w-5 h-5 ml-auto text-violet-600" />
+                    }
+                  </div>
+                  {expandedSections.notes && (
+                    <div className="mt-4 pl-8 space-y-3">
+                      <div className="space-y-4">
+                        <div>
+                          <h4 className="font-semibold mb-2" style={{color: COLORS.primary}}>Company Highlights:</h4>
+                          <ul className="list-disc list-inside space-y-1 text-sm mb-3">
+                            <li>Serving 200+ industrial clients across Europe</li>
+                            <li>Award-winning sustainability practices</li>
+                            <li>24/7 emergency services available</li>
+                            <li>In-house R&D team for innovation</li>
+                          </ul>
+                          <div className="bg-gray-50 p-3 rounded-lg border">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Image className="w-4 h-4 text-violet-600" />
+                              <span className="text-xs font-medium" style={{color: COLORS.primary}}>Awards & Recognition:</span>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2">
+                              <div className="bg-violet-100 h-16 rounded flex items-center justify-center text-xs text-violet-700 border border-violet-200">
+                                Industry Award<br/>Certificate 2023
+                              </div>
+                              <div className="bg-violet-100 h-16 rounded flex items-center justify-center text-xs text-violet-700 border border-violet-200">
+                                Company Timeline<br/>Gallery
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <h4 className="font-semibold mb-2" style={{color: COLORS.primary}}>Recent Projects:</h4>
+                          <ul className="list-disc list-inside space-y-1 text-sm mb-3">
+                            <li>Major industrial expansion in {selectedCompany.location.split(',')[0]} (2024)</li>
+                            <li>Infrastructure development projects</li>
+                            <li>Technology integration initiatives</li>
+                          </ul>
+                          <div className="bg-gray-50 p-3 rounded-lg border">
+                            <div className="flex items-center gap-2 mb-2">
+                              <FileText className="w-4 h-4 text-violet-600" />
+                              <span className="text-xs font-medium" style={{color: COLORS.primary}}>Project Documentation:</span>
+                            </div>
+                            <div className="space-y-2">
+                              <div className="flex items-center justify-between text-xs p-2 bg-white rounded border">
+                                <span>Project_Portfolio.pdf</span>
+                                <ExternalLink className="w-3 h-3 text-violet-600 cursor-pointer" />
+                              </div>
+                              <div className="flex items-center justify-between text-xs p-2 bg-white rounded border">
+                                <span>Case_Studies.pdf</span>
+                                <ExternalLink className="w-3 h-3 text-violet-600 cursor-pointer" />
+                              </div>
+                              <div className="bg-violet-100 h-12 rounded flex items-center justify-center text-xs text-violet-700 border border-violet-200">
+                                Project Photos
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="mt-6 flex gap-3">
+                <button
+                  onClick={() => {
+                    setShowCompanyDetails(false);
+                    handleContactCompany(selectedCompany);
+                  }}
+                  className="flex-1 px-6 py-3 text-white rounded-lg hover:opacity-90 font-medium flex items-center justify-center gap-2"
+                  style={{backgroundColor: COLORS.primary}}
+                >
+                  <MessageCircle className="w-5 h-5" />
+                  Contact Supplier
+                </button>
+                <button
+                  onClick={() => setShowCompanyDetails(false)}
+                  className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+
+
+const AISearchContent = () => (
+  <div className="space-y-6">
+    {/* AI Chat Interface */}
+    <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl border-2 border-purple-200 p-6">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 flex items-center justify-center">
+          <Sparkles className="w-6 h-6 text-white" />
+        </div>
+        <div>
+          <h3 className="font-bold text-gray-900">AI Search Assistant</h3>
+          <p className="text-sm text-gray-600">Ask me anything about suppliers...</p>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-lg p-4 mb-4 border border-purple-200">
+        <textarea
+          placeholder="E.g., 'Find steel suppliers in Germany with ISO certification' or 'Show me renewable energy companies with good ratings'..."
+          className="w-full outline-none resize-none text-gray-700"
+          rows="3"
+        />
+
+        {/* Attachment Options */}
+        <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-200">
+          <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors group relative" title="Attach File">
+            <Paperclip className="w-4 h-4 text-gray-600 group-hover:text-purple-600" />
+          </button>
+          <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors group relative" title="Upload Image">
+            <Image className="w-4 h-4 text-gray-600 group-hover:text-purple-600" />
+          </button>
+          <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors group relative" title="Attach Document">
+            <File className="w-4 h-4 text-gray-600 group-hover:text-purple-600" />
+          </button>
+          <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors group relative" title="Record Audio">
+            <Mic className="w-4 h-4 text-gray-600 group-hover:text-purple-600" />
+          </button>
+          <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors group relative" title="Record Video">
+            <Video className="w-4 h-4 text-gray-600 group-hover:text-purple-600" />
+          </button>
+          <div className="flex-1"></div>
+          <span className="text-xs text-gray-500">Attachments supported</span>
+        </div>
+      </div>
+
+      <div className="flex gap-3">
+        <button className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:opacity-90 transition-opacity font-medium flex items-center justify-center gap-2">
+          <Send className="w-5 h-5" />
+          Ask AI
+        </button>
+        <button className="px-6 py-3 bg-white border-2 border-purple-300 text-purple-700 rounded-lg hover:bg-purple-50 transition-colors font-medium">
+          Clear
+        </button>
+      </div>
+    </div>
+
+    {/* AI Suggestions */}
+    <div className="bg-white rounded-xl border-2 border-gray-300 p-6">
+      <h3 className="text-lg font-bold mb-4 flex items-center gap-2" style={{color: COLORS.primary}}>
+        <Brain className="w-5 h-5" />
+        Smart Recommendations
+      </h3>
+      <div className="space-y-3">
+        {[
+          'Top-rated steel suppliers in your region',
+          'Companies with recent positive reviews',
+          'Suppliers matching your budget range',
+          'New suppliers in your industry'
+        ].map((suggestion, i) => (
+          <button
+            key={i}
+            className="w-full text-left p-4 bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg hover:bg-purple-100 transition-colors"
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-gray-800">{suggestion}</span>
+              <Sparkles className="w-4 h-4 text-purple-500" />
+            </div>
+          </button>
+        ))}
+      </div>
+    </div>
+
+    {/* AI Insights */}
+    <div className="bg-white rounded-xl border-2 border-gray-300 p-6">
+      <h3 className="text-lg font-bold mb-4" style={{color: COLORS.primary}}>AI-Generated Insights</h3>
+      <div className="space-y-4">
+        <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <p className="text-sm text-gray-700"><strong>Trend Alert:</strong> Steel prices expected to decrease by 5% next quarter based on market analysis.</p>
+        </div>
+        <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+          <p className="text-sm text-gray-700"><strong>Opportunity:</strong> 3 new certified suppliers match your requirements with competitive pricing.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+export default function KraubexSidebar() {
+  const [activeSection, setActiveSection] = useState('suppliers');
+  const [activeSubItem, setActiveSubItem] = useState('keyword-search');
+  const [subItemModes, setSubItemModes] = useState({});
+  const [isSubSidebarOpen, setIsSubSidebarOpen] = useState(true);
+  const [isAgentFactoryOpen, setIsAgentFactoryOpen] = useState(false);
+  const [selectedAgent, setSelectedAgent] = useState(null);
+  const [agentTask, setAgentTask] = useState('');
+
+  const handleSectionClick = useCallback((sectionId) => {
+    setActiveSection(sectionId);
+    const section = [...sidebarData, ...bottomItems].find(s => s.id === sectionId);
+    if (section && section.subItems.length > 0) {
+      setActiveSubItem(section.subItems[0].id);
+    }
+    setIsSubSidebarOpen(true);
+  }, []);
+
+  const handleSubItemClick = useCallback((subItemId) => {
+    setActiveSubItem(subItemId);
+  }, []);
+
+  const toggleSubItemMode = useCallback((subItemId) => {
+    setSubItemModes(prev => ({
+      ...prev,
+      [subItemId]: prev[subItemId] === 'agentic' ? 'manual' : 'agentic'
+    }));
+  }, []);
+
+  const getSubItemMode = useCallback((subItemId, defaultType) => {
+    return subItemModes[subItemId] || defaultType;
+  }, [subItemModes]);
+
+  const toggleSubSidebar = useCallback(() => {
+    setIsSubSidebarOpen(prev => !prev);
+  }, []);
+
+  const toggleAgentFactory = useCallback(() => {
+    setIsAgentFactoryOpen(prev => !prev);
+  }, []);
+
+  const handleAgentSelect = useCallback((agent) => {
+    setSelectedAgent(agent);
+    setAgentTask('');
+  }, []);
+
+  const handleAssignTask = useCallback(() => {
+    if (selectedAgent && agentTask.trim()) {
+      alert(`Task assigned to ${selectedAgent.name}: ${agentTask}`);
+      setAgentTask('');
+      setSelectedAgent(null);
+    }
+  }, [selectedAgent, agentTask]);
+
+  const allItems = [...sidebarData, ...bottomItems];
+  const currentSection = allItems.find(item => item.id === activeSection);
+  const currentSubItem = currentSection?.subItems.find(item => item.id === activeSubItem);
+  const currentMode = currentSubItem ? getSubItemMode(currentSubItem.id, currentSubItem.type) : 'manual';
+
+  return (
+    <div className="flex h-screen relative" style={{backgroundColor: COLORS.background}}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Inria+Serif:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap');
+        .font-roboto { font-family: 'Roboto', sans-serif; }
+      `}</style>
+
+      {/* Main Sidebar */}
+      <div className="w-64 bg-white shadow-2xl border-r border-gray-200 flex flex-col font-roboto">
+        <div className="p-6 border-b border-gray-200">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <img
+                src={kraubexLogo}
+                alt="Kraubex Logo"
+                className="w-8 h-8 rounded-lg object-contain"
+              />
+              <h1 className="text-xl font-bold" style={{ color: COLORS.text }}>
+                Kraubex
+              </h1>
+            </div>
+
+            <button
+              onClick={toggleAgentFactory}
+              className="p-2 rounded-lg transition-colors hover:bg-orange-50"
+              style={{color: COLORS.primary}}
+              title="Agent Factory"
+            >
+              <Rocket className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+
+        <div className="flex-1 py-4 overflow-y-auto">
+          {sidebarData.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeSection === item.id;
+
+            return (
+              <div
+                key={item.id}
+                onClick={() => handleSectionClick(item.id)}
+                className={`flex items-center gap-3 px-4 py-3 mx-2 mb-1 cursor-pointer transition-all duration-200 rounded-lg ${
+                  isActive ? 'text-white shadow-lg' : 'text-gray-700 hover:bg-gray-100'
+                }`}
+                style={{backgroundColor: isActive ? COLORS.orange : 'transparent'}}
+              >
+                <Icon className={`w-5 h-5 ${isActive ? 'text-white' : item.color}`} />
+                <span className="font-medium">{item.title}</span>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="p-4 border-t border-gray-200">
+          {bottomItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeSection === item.id;
+
+            return (
+              <div
+                key={item.id}
+                onClick={() => handleSectionClick(item.id)}
+                className={`flex items-center gap-3 px-4 py-3 mx-2 mb-1 cursor-pointer transition-all duration-200 rounded-lg ${
+                  isActive ? 'bg-gray-200 text-gray-900' : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                <Icon className={`w-5 h-5 ${item.color}`} />
+                <span className="font-medium">{item.title}</span>
+              </div>
+            );
+          })}
+
+          <div className="mt-4 p-4 bg-gradient-to-r from-orange-50 to-red-50 rounded-xl border" style={{borderColor: COLORS.orange + '40'}}>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-orange-400 to-red-400 flex items-center justify-center text-white font-bold text-sm">
+                VA
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-sm font-medium text-gray-900 truncate">Venugopal Achhe</div>
+                <div className="text-xs text-gray-500 truncate">venugopal.achhe@kraubex.com</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Sub Sidebar */}
+      <div
+        className={`bg-white shadow-xl border-r border-gray-200 flex flex-col font-roboto overflow-y-auto transition-all duration-300 ${
+          isSubSidebarOpen ? 'w-80' : 'w-0'
+        }`}
+        style={{
+          minWidth: isSubSidebarOpen ? '320px' : '0px',
+          opacity: isSubSidebarOpen ? 1 : 0
+        }}
+      >
+        {currentSection && isSubSidebarOpen && (
+          <>
+            <div className="p-6 border-b border-gray-200 sticky top-0 bg-white z-10">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-3">
+                  {React.createElement(currentSection.icon, { className: `w-6 h-6 ${currentSection.color}` })}
+                  <h2 className="text-lg font-bold" style={{color: COLORS.primary}}>{currentSection.title}</h2>
+                </div>
+                <button
+                  onClick={toggleSubSidebar}
+                  className="p-1 hover:bg-gray-100 rounded transition-colors"
+                  title="Close sidebar"
+                >
+                  <ChevronLeft className="w-5 h-5 text-gray-600" />
+                </button>
+              </div>
+              <p className="text-xs text-gray-600">Select a feature and toggle mode</p>
+            </div>
+
+            <div className="p-4 space-y-2">
+              {currentSection.subItems.map((subItem) => {
+                const SubIcon = subItem.icon;
+                const isActive = activeSubItem === subItem.id;
+                const currentMode = getSubItemMode(subItem.id, subItem.type);
+                const isAgentic = currentMode === 'agentic';
+
+                return (
+                  <div
+                    key={subItem.id}
+                    onClick={() => handleSubItemClick(subItem.id)}
+                    className={`rounded-lg p-3 cursor-pointer transition-all duration-200 border-2 ${
+                      isActive
+                        ? 'bg-orange-50'
+                        : 'border-transparent bg-gray-50 hover:bg-gray-100'
+                    }`}
+                    style={{
+                      borderColor: isActive ? COLORS.primary : 'transparent'
+                    }}
+                  >
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                      <div className="flex items-start gap-2 flex-1 min-w-0">
+                        <SubIcon className={`w-4 h-4 mt-0.5 flex-shrink-0`} style={{color: isActive ? COLORS.primary : '#6b7280'}} />
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-semibold text-sm text-gray-900 leading-tight">{subItem.title}</h3>
+                          <p className="text-xs text-gray-600 mt-0.5">{subItem.description}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between mt-3">
+                      <span className="text-xs text-gray-500 font-medium">Mode:</span>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleSubItemMode(subItem.id);
+                        }}
+                        className="relative inline-flex items-center h-4 w-14 rounded-full transition-colors duration-200"
+                        style={{backgroundColor: isAgentic ? '#9333ea' : '#6b7280'}}
+                      >
+                        <span className={`inline-block h-2.5 w-6 transform rounded-full bg-white shadow-md transition-transform duration-200 flex items-center justify-center ${
+                          isAgentic ? 'translate-x-7' : 'translate-x-0.5'
+                        }`}>
+                          {isAgentic ? <Bot className="w-1.5 h-1.5 text-purple-600" /> : <Hand className="w-1.5 h-1.5 text-gray-600" />}
+                        </span>
+                        <span className={`absolute left-1 text-[9px] font-medium text-white ${isAgentic ? 'opacity-0' : 'opacity-100'}`}>M</span>
+                        <span className={`absolute right-1 text-[9px] font-medium text-white ${isAgentic ? 'opacity-100' : 'opacity-0'}`}>AI</span>
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Agent Factory Sidebar */}
+      <div
+        className={`bg-white shadow-2xl border-r border-gray-200 flex flex-col font-roboto overflow-y-auto transition-all duration-300 ${
+          isAgentFactoryOpen ? 'w-96' : 'w-0'
+        }`}
+        style={{
+          minWidth: isAgentFactoryOpen ? '384px' : '0px',
+          opacity: isAgentFactoryOpen ? 1 : 0,
+          position: 'absolute',
+          right: 0,
+          top: 0,
+          height: '100%',
+          zIndex: 30
+        }}
+      >
+        {isAgentFactoryOpen && (
+          <>
+            <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-orange-50 to-red-50">
+              <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center">
+                    <Rocket className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold" style={{color: COLORS.primary}}>Agent Factory</h2>
+                    <p className="text-xs text-gray-600">AI Procurement Agents</p>
+                  </div>
+                </div>
+                <button
+                  onClick={toggleAgentFactory}
+                  className="p-1 hover:bg-white rounded transition-colors"
+                  title="Close Agent Factory"
+                >
+                  <X className="w-5 h-5 text-gray-600" />
+                </button>
+              </div>
+            </div>
+
+            <div className="flex-1 p-4 space-y-3 overflow-y-auto">
+              {procurementAgents.map((agent) => {
+                const AgentIcon = agent.icon;
+                const isSelected = selectedAgent?.id === agent.id;
+
+                return (
+                  <div
+                    key={agent.id}
+                    onClick={() => handleAgentSelect(agent)}
+                    className={`rounded-xl p-4 cursor-pointer transition-all duration-200 border-2 ${
+                      isSelected
+                        ? 'border-orange-300 bg-orange-50 shadow-lg'
+                        : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-md'
+                    }`}
+                  >
+                    <div className="flex items-start gap-3 mb-3">
+                      <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${agent.color} flex items-center justify-center flex-shrink-0`}>
+                        <AgentIcon className="w-6 h-6 text-white" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between mb-1">
+                          <h3 className="font-bold text-gray-900">{agent.name}</h3>
+                          <div className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${
+                            agent.status === 'active'
+                              ? 'bg-green-100 text-green-700'
+                              : 'bg-gray-100 text-gray-600'
+                          }`}>
+                            {agent.status}
+                          </div>
+                        </div>
+                        <p className="text-xs text-gray-600 leading-relaxed mb-2">{agent.description}</p>
+                        <div className="flex items-center gap-3 text-xs text-gray-500">
+                          <div className="flex items-center gap-1">
+                            <Briefcase className="w-3 h-3" />
+                            <span>{agent.specialty}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between pt-3 border-t border-gray-200">
+                      <div className="flex items-center gap-1">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-green-600" />
+                        <span className="text-xs text-gray-700 font-medium">{agent.tasksCompleted} tasks</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500" />
+                        <span className="text-xs text-gray-700 font-medium">{agent.rating}</span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {selectedAgent && (
+              <div className="p-4 border-t-2 border-gray-200 bg-gradient-to-r from-orange-50 to-red-50">
+                <div className="bg-white rounded-lg p-4 border-2 border-orange-200">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className={`w-8 h-8 rounded-lg bg-gradient-to-r ${selectedAgent.color} flex items-center justify-center`}>
+                      {React.createElement(selectedAgent.icon, { className: 'w-4 h-4 text-white' })}
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-sm" style={{color: COLORS.primary}}>Assign Task to {selectedAgent.name}</h4>
+                      <p className="text-[10px] text-gray-600">{selectedAgent.specialty}</p>
+                    </div>
+                  </div>
+
+                  <textarea
+                    value={agentTask}
+                    onChange={(e) => setAgentTask(e.target.value)}
+                    placeholder="Describe the task you want this agent to perform..."
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm resize-none outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-300 mb-3"
+                    rows="3"
+                  />
+
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handleAssignTask}
+                      disabled={!agentTask.trim()}
+                      className="flex-1 px-4 py-2 bg-gradient-to-r text-white rounded-lg hover:opacity-90 transition-opacity font-medium text-sm flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                      style={{background: `linear-gradient(to right, ${COLORS.primary}, #ff6b35)`}}
+                    >
+                      <Play className="w-4 h-4" />
+                      Assign Task
+                    </button>
+                    <button
+                      onClick={() => setSelectedAgent(null)}
+                      className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium text-sm"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+
+      {!isAgentFactoryOpen && (
+        <button
+          onClick={toggleAgentFactory}
+          className="fixed right-0 top-1/2 transform -translate-y-1/2 bg-white border-2 rounded-l-lg p-3 hover:bg-orange-50 transition-colors shadow-lg z-20 flex flex-col items-center gap-1"
+          title="Open Agent Factory"
+          style={{borderColor: COLORS.primary}}
+        >
+          <Rocket className="w-5 h-5" style={{color: COLORS.primary}} />
+          <span className="text-[10px] font-bold writing-mode-vertical" style={{color: COLORS.primary, writingMode: 'vertical-rl'}}>
+            AGENTS
+          </span>
+        </button>
+      )}
+
+      {!isSubSidebarOpen && (
+        <button
+          onClick={toggleSubSidebar}
+          className="absolute left-64 top-1/2 transform -translate-y-1/2 bg-white border-2 border-gray-300 rounded-r-lg p-2 hover:bg-gray-50 transition-colors shadow-lg z-20"
+          title="Open sidebar"
+          style={{borderColor: COLORS.primary}}
+        >
+          <ChevronRight className="w-5 h-5" style={{color: COLORS.primary}} />
+        </button>
+      )}
+
+      <div className="flex-1 overflow-y-auto" style={{backgroundColor: COLORS.background}}>
+        <div className="p-8">
+          {currentSubItem && (
+            <>
+              <div className="bg-white rounded-xl border-2 border-gray-300 p-6 mb-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    {React.createElement(currentSubItem.icon, { className: 'w-8 h-8', style: {color: COLORS.primary} })}
+                    <div>
+                      <h1 className="text-2xl font-bold" style={{color: COLORS.primary}}>{currentSubItem.title}</h1>
+                      <p className="text-sm text-gray-600">{currentSubItem.description}</p>
+                    </div>
+                  </div>
+                  <div className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-2 ${
+                    currentMode === 'agentic'
+                      ? 'bg-gradient-to-r from-purple-100 to-blue-100 text-purple-700 border-2 border-purple-300'
+                      : 'bg-gray-100 text-gray-700 border-2 border-gray-300'
+                  }`}>
+                    {currentMode === 'agentic' ? (
+                      <>
+                        <Bot className="w-4 h-4" />
+                        AI Mode Active
+                      </>
+                    ) : (
+                      <>
+                        <Hand className="w-4 h-4" />
+                        Manual Mode Active
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {currentMode === 'manual' ? <ManualSearchContent /> : <AISearchContent />}
+
+              {currentSubItem?.id === 'appointment-calendar' && <AppointmentCalendarContent />}
+
+              {currentSubItem?.id === 'supplier-chat' && <SupplierChatContent />}
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
