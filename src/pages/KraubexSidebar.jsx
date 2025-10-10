@@ -372,7 +372,7 @@ import {
   Award,
   ExternalLink
 } from 'lucide-react';
-import kraubexLogo from "./assets/kraubex-logo.png";
+import kraubexLogo from "../assets/kraubex-logo.png";
 
 const COLORS = {
   primary: '#c04000',
