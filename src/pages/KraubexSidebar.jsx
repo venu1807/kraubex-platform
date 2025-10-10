@@ -373,6 +373,7 @@ import {
   ExternalLink
 } from 'lucide-react';
 import kraubexLogo from "../assets/kraubex-logo.png";
+import { Link } from "react-router-dom";
 
 const COLORS = {
   primary: '#c04000',
@@ -1875,11 +1876,13 @@ export default function KraubexSidebar() {
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <img
-                src={kraubexLogo}
-                alt="Kraubex Logo"
-                className="w-8 h-8 rounded-lg object-contain"
-              />
+              <Link to="/">
+                  <img
+                    src={kraubexLogo}
+                    alt="Kraubex Logo"
+                    className="w-8 h-8 rounded-lg object-contain"
+                  />
+              </Link>
               <h1 className="text-xl font-bold" style={{ color: COLORS.text }}>
                 Kraubex
               </h1>

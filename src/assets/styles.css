@@ -11,8 +11,9 @@ body {
   font-weight: 400;
 }
 
+
 /* Headings: elegant serif */
-h1, h2, h3, h4, h5, h6 {
+h2, h3, h4, h5, h6 {
   font-family: 'Inria Serif', Georgia, 'Times New Roman', serif;
   font-weight: 700;
   color: #2c3e50;
@@ -178,7 +179,7 @@ nav {
 /* --- MAIN CONTENT --- */
 main {
   padding: 2rem;
-  font-size: 1.2rem;
+  font-size: 4 rem;
 }
 
 main > section {

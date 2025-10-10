@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import Pricing from "./pages/Pricing.jsx";
+import Academy from "./pages/Academy.jsx";
 import KraubexSidebar from "./pages/KraubexSidebar.jsx";
 
 export default function App() {
@@ -10,6 +11,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/product" element={<KraubexSidebar />} />
+        <Route path="/academy" element={<Academy />} />
       </Routes>
     </Router>
   );

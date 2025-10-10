@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../assets/styles.css"; // adjust path if needed
 import KraubexLogo from "../assets/kraubex-logo.png";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLinkedin, faYoutube } from "@fortawesome/free-brands-svg-icons";
 
 const Pricing = () => {
   const [navActive, setNavActive] = useState(false);
@@ -237,7 +239,7 @@ const Pricing = () => {
 
       <hr className="full-width-line" />
 
-      <footer>
+       <footer>
         <div className="footer-content">
           <div className="footer-left">
             <p>© 2025 Kraubex. All rights reserved.</p>
@@ -245,9 +247,7 @@ const Pricing = () => {
           </div>
           <div className="footer-right">
             <form className="newsletter-form" aria-label="Subscribe to newsletter">
-              <p style={{ marginBottom: "0.5rem" }}>
-                Subscribe for smart procurement insights
-              </p>
+              <p style={{ marginBottom: "0.5rem" }}>Subscribe for smart procurement insights</p>
               <input type="email" placeholder="Your email address" required />
               <button type="submit" className="btn btn-orange">Subscribe</button>
             </form>
@@ -257,28 +257,11 @@ const Pricing = () => {
         <div className="footer-bottom">
           <p>Made in Bielefeld, Germany.</p>
           <div style={{ marginTop: "1rem" }}>
-            <a
-              href="https://www.linkedin.com/company/kraubex/?viewAsMember=true"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Kraubex on LinkedIn"
-              style={{
-                margin: "0 10px",
-                color: "#0077b5",
-                fontSize: "1.5rem",
-                textDecoration: "none",
-              }}
-            >
-              <i className="fab fa-linkedin"></i>
+            <a href="https://www.linkedin.com/company/kraubex/?viewAsMember=true" target="_blank" aria-label="Kraubex on LinkedIn" style={{ margin: "0 10px", color: "#0077b5", fontSize: "1.5rem", textDecoration: "none" }}>
+              <FontAwesomeIcon icon={faLinkedin} size="1x" />
             </a>
-            <a
-              href="https://www.youtube.com/watch?v=CXYizymW5h8"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Kraubex on YouTube"
-              style={{ margin: "0 10px", color: "#FF0000", fontSize: "1.5rem" }}
-            >
-              <i className="fab fa-youtube"></i>
+            <a href="https://www.youtube.com/watch?v=CXYizymW5h8" target="_blank" aria-label="Kraubex on YouTube" style={{ margin: "0 10px", color: "#FF0000", fontSize: "1.5rem" }}>
+              <FontAwesomeIcon icon={faYoutube} size="1x" />
             </a>
           </div>
         </div>
