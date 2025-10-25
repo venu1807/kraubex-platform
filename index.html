@@ -5,6 +5,21 @@
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kraubex AI</title>
+
+    <!-- 🔁 Redirect old .html URLs to SPA routes -->
+    <script>
+      (function () {
+        const redirects = {
+          "/product.html": "/product",
+          "/academy.html": "/academy",
+          "/pricing.html": "/pricing",
+        };
+        const current = window.location.pathname;
+        if (redirects[current]) {
+          window.location.replace(redirects[current]);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
