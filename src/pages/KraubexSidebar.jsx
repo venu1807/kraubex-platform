@@ -819,7 +819,12 @@ const SupplierChatContent = ({ companyInfo }) => {
     setShowRFQForm(true);
   };
 
-
+ const handleViewRFQ = (msg) => {
+  // Example: open a modal with RFQ details
+  // You can implement your modal logic or navigate to a RFQ detail page
+  console.log('View RFQ clicked:', msg.rfqData);
+  alert(`Viewing RFQ: ${msg.rfqData.rfqId}\nProject: ${msg.rfqData.projectName}`);
+  };
 
   const handleShareRFQ = () => {
     const rfqMessage = {
@@ -1060,15 +1065,25 @@ const SupplierChatContent = ({ companyInfo }) => {
                   rfqStatuses[msg.id] === 'rejected' ? 'border-red-500 bg-red-50' : ''
                 }`}>
                   <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <FileText className="w-4 h-4 text-blue-600" />
-                      <span className="font-semibold text-blue-600">
+                    <div className="flex items-center gap-2 overflow-hidden">
+                      <FileText className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                      <span className="font-semibold text-blue-600 truncate max-w-[180px]">
                         {msg.isUpdate ? '📝 Updated RFQ' : 'RFQ'}: {msg.rfqData.type}
                       </span>
                     </div>
-                    <span className="text-xs font-mono bg-gray-200 px-2 py-1 rounded">
-                      {msg.rfqData.rfqId}
-                    </span>
+                  {/* RFQ ID + View icon, always shown for shared RFQs */}
+                  {msg.isRFQ && (
+                    <div className="flex items-center gap-1 flex-shrink-0 ml-2">
+                      <span className="text-xs font-mono bg-gray-200 px-2 py-1 rounded">
+                        {msg.rfqData.rfqId}
+                      </span>
+                      <Eye
+                        className="w-4 h-4 text-blue-600 cursor-pointer hover:text-blue-700 transition-colors"
+                        onClick={() => handleViewRFQ(msg)}
+                        title="View RFQ"
+                      />
+                    </div>
+                  )}
                   </div>
                   {rfqStatuses[msg.id] && (
                     <div className="mb-2">
