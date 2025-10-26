@@ -5,7 +5,7 @@ import KraubexLogo from "../assets/kraubex-logo.png";
 import KraubexFlow from "../assets/Kraubex_Flow9.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLinkedin, faYoutube } from "@fortawesome/free-brands-svg-icons";
-import { Search, BarChart2, Cpu, Plug } from "lucide-react";
+import { Search, BarChart2, Cpu, Plug, ChevronDown } from "lucide-react";
 
 
 // Inside your footer JSX
@@ -33,10 +33,66 @@ import { Search, BarChart2, Cpu, Plug } from "lucide-react";
 
 const Home = () => {
   const [navActive, setNavActive] = useState(false);
+  const [openIndex, setOpenIndex] = useState(null);
 
   const toggleNav = () => {
     setNavActive(!navActive);
   };
+
+  const faqs = [
+    {
+      question: "What is KraubexAI?",
+      answer:
+        "KraubexAI is an AI-powered procurement orchestration platform that helps MSMEs and local governments manage sourcing, supplier discovery, and purchasing with enterprise-level intelligence and transparency.",
+    },
+    {
+      question: "Who is it for?",
+      answer:
+        "KraubexAI is built for micro, small, and medium-sized businesses, startups, and local government departments managing procurement for infrastructure, utilities, and services.",
+    },
+    {
+      question: "Why is it needed?",
+      answer:
+        "Over 350 million MSMEs and thousands of city administrations still rely on manual or fragmented procurement tools. KraubexAI brings them modern, AI-driven sourcing intelligence that was once only available to large enterprises.",
+    },
+    {
+      question: "How does it work?",
+      answer:
+        "KraubexAI connects your procurement data, external supplier networks, and market insights through an AI layer that automates discovery, bid comparison, and collaboration — all within a single workspace.",
+    },
+    {
+      question: "How can I get started?",
+      answer: (
+        <div className="space-y-4">
+          <p className="text-gray-700">
+            You can explore KraubexAI directly on our{" "}
+            <a
+              href="/product"
+              className="font-medium"
+              style={{ color: "#C04000" }}
+              onMouseOver={(e) => (e.target.style.color = "#a33600")}
+              onMouseOut={(e) => (e.target.style.color = "#C04000")}
+            >
+              Product
+            </a>{" "}
+            page to get hands-on experience, or{" "}
+            <a
+              href="https://calendly.com/venugopal-achhe/kraubexai-demo"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium"
+              style={{ color: "#C04000" }}
+              onMouseOver={(e) => (e.target.style.color = "#a33600")}
+              onMouseOut={(e) => (e.target.style.color = "#C04000")}
+            >
+              Book a Demo
+            </a>{" "}
+            with our team to see how KraubexAI can transform your procurement workflows.
+          </p>
+        </div>
+      ),
+    }
+  ];
 
   return (
     <>
@@ -168,10 +224,50 @@ const Home = () => {
             <h2 style={{ fontSize: "1.5rem", fontWeight: "700", textAlign: "center", color: "#2c3e50" }}>
                  Join the Kraubex Community Today
             </h2>
-            <a href="#" className="btn btn-primary">Try Kraubex Free</a>
+            <Link to="/product" className="btn btn-primary">
+                Try Kraubex Free
+            </Link>
           </div>
         </section>
       </main>
+
+      {/* --- FAQ SECTION --- */}
+      <section className="max-w-4xl mx-auto px-4 py-16">
+        <h2 className="text-3xl font-bold text-center mb-6">Frequently Asked Questions</h2>
+
+        <p className="text-center text-gray-600 max-w-2xl mx-auto mb-10">
+          KraubexAI empowers{" "}
+          <span className="font-semibold text-gray-800">MSMEs</span> and{" "}
+          <span className="font-semibold text-gray-800">local governments</span> to
+          digitize and orchestrate their procurement workflows — from supplier discovery
+          to compliance.
+        </p>
+
+        <div className="space-y-4">
+          {faqs.map((faq, i) => (
+            <div key={i} className="border border-gray-200 rounded-2xl bg-white shadow-sm">
+              <button
+                onClick={() => setOpenIndex(openIndex === i ? null : i)}
+                className="flex justify-between items-center w-full px-5 py-4 text-left"
+              >
+                <span className="font-medium text-gray-900">{faq.question}</span>
+                <ChevronDown
+                  className={`w-5 h-5 text-gray-600 transition-transform duration-300 ${
+                    openIndex === i ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+              <div
+                className={`overflow-hidden transition-all duration-300 ${
+                  openIndex === i ? "max-h-60 px-5 pb-4" : "max-h-0"
+                }`}
+              >
+                <p className="text-gray-600">{faq.answer}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
       <hr className="full-width-line" />
 
