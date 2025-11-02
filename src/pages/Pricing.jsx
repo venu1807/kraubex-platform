@@ -4,6 +4,8 @@ import "../assets/styles.css"; // adjust path if needed
 import KraubexLogo from "../assets/kraubex-logo.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLinkedin, faYoutube } from "@fortawesome/free-brands-svg-icons";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 const Pricing = () => {
   const [navActive, setNavActive] = useState(false);
@@ -14,58 +16,7 @@ const Pricing = () => {
 
   return (
     <>
-      <header>
-        <nav>
-          <div className={`nav-left ${navActive ? "active" : ""}`} id="navLeft">
-            <a href="/">
-              <img src={KraubexLogo} alt="Kraubex Logo" height="48" />
-            </a>
-
-            <ul className="nav-links">
-              <li><Link to="/product">Product</Link></li>
-              <li><Link to="/academy">Academy</Link></li>
-              <li><Link to="/pricing">Pricing</Link></li>
-            </ul>
-          </div>
-
-          <div
-            className="nav-toggle"
-            id="navToggle"
-            role="button"
-            aria-label="Toggle navigation"
-            aria-expanded={navActive}
-            tabIndex="0"
-            onClick={toggleNav}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                toggleNav();
-              }
-            }}
-          >
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-
-          <div className={`nav-right ${navActive ? "active" : ""}`} id="navRight">
-            <a
-              href="https://calendly.com/venugopal-achhe/kraubexai-demo"
-              className="btn btn-secondary"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Book a demo
-            </a>
-            <a href="#" className="btn btn-secondary">
-              Sign in
-            </a>
-            <a href="#" className="btn btn-primary">
-              Join Kraubex
-            </a>
-          </div>
-        </nav>
-      </header>
+      <Header />
 
       <hr className="full-width-line" />
 
@@ -253,33 +204,7 @@ const Pricing = () => {
 
       <hr className="full-width-line" />
 
-       <footer>
-        <div className="footer-content">
-          <div className="footer-left">
-            <p>© 2025 Kraubex. All rights reserved.</p>
-            <p>info@kraubex.de | +49 176 73550445 | Bielefeld, Germany</p>
-          </div>
-          <div className="footer-right">
-            <form className="newsletter-form" aria-label="Subscribe to newsletter">
-              <p style={{ marginBottom: "0.5rem" }}>Subscribe for smart procurement insights</p>
-              <input type="email" placeholder="Your email address" required />
-              <button type="submit" className="btn btn-orange">Subscribe</button>
-            </form>
-          </div>
-        </div>
-
-        <div className="footer-bottom">
-          <p>Made in Bielefeld, Germany.</p>
-          <div style={{ marginTop: "1rem" }}>
-            <a href="https://www.linkedin.com/company/kraubex/?viewAsMember=true" target="_blank" aria-label="Kraubex on LinkedIn" style={{ margin: "0 10px", color: "#0077b5", fontSize: "1.5rem", textDecoration: "none" }}>
-              <FontAwesomeIcon icon={faLinkedin} size="1x" />
-            </a>
-            <a href="https://www.youtube.com/watch?v=CXYizymW5h8" target="_blank" aria-label="Kraubex on YouTube" style={{ margin: "0 10px", color: "#FF0000", fontSize: "1.5rem" }}>
-              <FontAwesomeIcon icon={faYoutube} size="1x" />
-            </a>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </>
   );
 };

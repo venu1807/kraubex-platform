@@ -1,8 +1,12 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import Home from "./pages/Home.jsx";
-import Pricing from "./pages/Pricing.jsx";
-import Academy from "./pages/Academy.jsx";
-import KraubexSidebar from "./pages/KraubexSidebar.jsx";
+import Home from "./pages/Home";
+import Pricing from "./pages/Pricing";
+import Academy from "./pages/Academy";
+import KraubexSidebar from "./pages/KraubexSidebar";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 export default function App() {
   return (
@@ -13,6 +17,8 @@ export default function App() {
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/product" element={<KraubexSidebar />} />
         <Route path="/academy" element={<Academy />} />
+        <Route path="/signin"  element={<SignIn />} />
+        <Route path="/signup"  element={<SignUp />} />
 
         {/* 🔁 Redirect old .html URLs to SPA paths */}
         <Route path="/product.html" element={<Navigate to="/product" replace />} />
