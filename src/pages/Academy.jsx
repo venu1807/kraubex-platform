@@ -88,7 +88,7 @@ const Academy = () => {
             <h2
               style={{
                 color: "#c04000",        // same color as used for h1 earlier
-                fontSize: "2.5rem",      // larger heading size
+                fontSize: "2rem",      // larger heading size
                 marginBottom: "1rem",
                 fontWeight: "700",
               }}
@@ -104,7 +104,7 @@ const Academy = () => {
                 lineHeight: "1.8",
               }}
             >
-              It’s the place where one learns about modern procurment and AI.
+              It’s the place where one learns about modern Colloborative Procurment AI.
             </p>
           </div>
         </section>

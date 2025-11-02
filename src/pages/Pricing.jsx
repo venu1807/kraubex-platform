@@ -73,7 +73,15 @@ const Pricing = () => {
       <main>
         <section className="pricing" style={{ padding: "4rem 2rem", backgroundColor: "#f5f1e8" }}>
           <div style={{ textAlign: "center", marginBottom: "3rem" }}>
-            <h2 style={{ color: "#2c3e50" }}>Kraubex Pricing Plans</h2>
+
+          <h2 style={{
+            color: "#2c3e50",
+            fontSize: "2rem",
+            fontWeight: "bold",
+            marginBottom: "1rem"
+            }}>
+            Kraubex Pricing Plans
+          </h2>
             <p>Choose the plan that best fits your business needs.</p>
           </div>
 
@@ -102,6 +110,7 @@ const Pricing = () => {
               </p>
               <ul style={{ textAlign: "left", listStyle: "disc inside", marginBottom: "1.5rem" }}>
                 <li>AI-powered supplier matching</li>
+                <li>Invoice Comparision & Contract Drafting</li>
                 <li>
                   <span className="tooltip">
                     Multi-LLM
@@ -115,10 +124,22 @@ const Pricing = () => {
                 <li>Workflow automation & ERP integration</li>
                 <li>
                   <span className="tooltip">
-                    GDPR
+                    GDPR  {" "}
                     <span className="tooltiptext">EU General Data Protection Regulation compliance</span>
-                  </span>
-                  -compliant data handling & European servers
+                  </span>, {" "}
+                  <span className="tooltip">
+                    ISO 27001 {" "}
+                    <span className="tooltiptext">Information Security Management</span>
+                  </span>, {" "}
+                  <span className="tooltip">
+                    SOC Type 2 {" "}
+                    <span className="tooltiptext">Proven Operational Controls</span>
+                  </span>, {" "}
+                  <span className="tooltip">
+                    ISO 42001 {" "}
+                    <span className="tooltiptext">Responsible AI Governance</span>
+                  </span> {" "}
+                  - compliant data handling & cloud servers
                 </li>
                 <li>Secure access & encrypted storage</li>
               </ul>
@@ -159,7 +180,7 @@ const Pricing = () => {
                 <li>Team collaboration & approvals</li>
                 <li>Admin dashboard & usage stats</li>
                 <li>Centralized billing & user management</li>
-                <li>European-specific procurement insights & compliance</li>
+                <li>Personalised procurement insights </li>
                 <li>
                   Advanced security &{" "}
                   <span className="tooltip">
@@ -211,14 +232,7 @@ const Pricing = () => {
                   </span>{" "}
                   optimization for your procurement
                 </li>
-                <li>
-                  European hosting & full{" "}
-                  <span className="tooltip">
-                    GDPR
-                    <span className="tooltiptext">EU General Data Protection Regulation compliance</span>
-                  </span>{" "}
-                  compliance
-                </li>
+
                 <li>Priority support & account management</li>
                 <li>Advanced security policies & encryption</li>
                 <li>

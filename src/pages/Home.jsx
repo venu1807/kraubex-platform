@@ -56,6 +56,10 @@ const Home = () => {
         "Over 350 million MSMEs and thousands of city administrations still rely on manual or fragmented procurement tools. KraubexAI brings them modern, AI-driven sourcing intelligence that was once only available to large enterprises.",
     },
     {
+      question: "How does Kraubex protect my business data?",
+      answer: "We take data security seriously. Kraubex strictly follows ISO 27001 (information security management), SOC Type 2 (proven operational controls), GDPR (strict European data privacy), and ISO 42001 (responsible AI governance). This means your supplier relationships, contract terms, and spending patterns are protected with the same enterprise-grade security used by major corporations — giving you peace of mind to focus on smarter procurement, not data risks."
+    },
+    {
       question: "How does it work?",
       answer:
         "KraubexAI connects your procurement data, external supplier networks, and market insights through an AI layer that automates discovery, bid comparison, and collaboration — all within a single workspace.",
@@ -238,7 +242,7 @@ const Home = () => {
         <p className="text-center text-gray-600 max-w-2xl mx-auto mb-10">
           KraubexAI empowers{" "}
           <span className="font-semibold text-gray-800">MSMEs</span> and{" "}
-          <span className="font-semibold text-gray-800">local governments</span> to
+          <span className="font-semibold text-gray-800">Local Governments</span> to
           digitize and orchestrate their procurement workflows — from supplier discovery
           to compliance.
         </p>
