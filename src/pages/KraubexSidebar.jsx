@@ -374,6 +374,9 @@ import {
   ChevronDown,
   ChevronUp,
   Award,
+  DownloadCloud,
+  GitMerge,
+  RefreshCw,
   ExternalLink
 } from 'lucide-react';
 import kraubexLogo from "../assets/kraubex-logo.png";
@@ -673,13 +676,12 @@ const sidebarData = [
     icon: Layers,
     color: 'text-indigo-900',
     subItems: [
-      { id: 'team-dashboard', title: 'Team Dashboard', icon: Users, type: 'manual', description: 'Team performance & activities' },
-      { id: 'collaboration-ai', title: 'Collaboration AI', icon: Bot, type: 'agentic', description: 'Smart team coordination' },
-      { id: 'task-management', title: 'Task Management', icon: CheckSquare, type: 'manual', description: 'Assign & track tasks' },
-      { id: 'workflow-automation', title: 'Workflow Automation', icon: Brain, type: 'agentic', description: 'Intelligent process flows' },
-      { id: 'approval-workflows', title: 'Approval Workflows', icon: GitBranch, type: 'manual', description: 'Custom approval chains' },
-      { id: 'smart-delegation', title: 'Smart Delegation', icon: Target, type: 'agentic', description: 'AI-based task assignment' },
-      { id: 'appointment-calendar', title: 'Appointment Calendar', icon: Calendar, type: 'manual', description: 'Schedule supplier meetings' }
+    { id: 'data-sources', title: 'Data Sources', icon: Database, type: 'manual', description: 'Connect ERP systems and manage permissions' },
+    { id: 'data-imports', title: 'Data Imports', icon: DownloadCloud, type: 'manual', description: 'Import supplier, PO, and spend data from ERP' },
+    { id: 'data-mapping', title: 'Data Mapping', icon: GitMerge, type: 'manual', description: 'Map ERP fields to KraubexAI schema' },
+    { id: 'sync-settings', title: 'Sync Settings', icon: RefreshCw, type: 'manual', description: 'Configure real-time and scheduled data sync' },
+    { id: 'integration-health', title: 'Integration Health', icon: Activity, type: 'agentic', description: 'Monitor data sync quality and detect issues' },
+    { id: 'advanced-configuration', title: 'Advanced Configuration', icon: Settings, type: 'manual', description: 'Set up APIs, multi-ERP, and security policies' }
     ]
   },
   {
