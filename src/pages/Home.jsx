@@ -21,7 +21,7 @@ const Home = () => {
     {
       question: "What is KraubexAI?",
       answer:
-        "KraubexAI is an AI-powered procurement orchestration platform that helps MSMEs and local governments manage sourcing, supplier discovery, and purchasing with enterprise-level intelligence and transparency.",
+        "KraubexAI is an AI Procurement Specialist that helps MSMEs and local governments manage sourcing, supplier discovery, and purchasing with enterprise-level intelligence and transparency.",
     },
     {
       question: "Who is it for?",
@@ -86,14 +86,14 @@ const Home = () => {
         <section className="hero" aria-labelledby="hero-heading">
 
           <h1 id="hero-heading" className="text-3xl font-bold leading-tight text-gray-900">
-              Welcome to <span className="text-blue-600">Kraubex</span> – Your Smart AI Procurement Assistant
+              Welcome to <span className="text-blue-600">Kraubex</span> – Your Smart AI Procurement Specialist
           </h1>
 
           <p>
-            Kraubex helps small and medium-sized businesses buy smarter, faster,
-            and with less effort. Our AI assistant helps you find the right suppliers,
+            KraubexAI helps small and medium-sized businesses buy smarter, faster,
+            and with less effort. Our AI Specialist helps you find the right suppliers,
             compare prices, automate tasks, and understand your spending. Powered by
-            collective intelligence and smart algorithms, Kraubex supports better decisions,
+            collective intelligence and smart algorithms, KraubexAI supports better decisions,
             reduces risks, and saves you time, money, and energy at every step of procurement.
           </p>
 
