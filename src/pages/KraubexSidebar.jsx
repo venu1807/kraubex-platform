@@ -1,3 +1,10 @@
+import RFQComparison from "../components/RFQComparison";
+import ApprovalManagement from "../components/ApprovalManagement"
+import PurchaseOrderManagement from "../components/PurchaseOrderManagement"
+import QualityControlManagement from "../components/QualityControlManagement"
+import InvoiceMatchingManagement from "../components/InvoiceMatchingManagement"
+import PaymentApprovalManagement from "../components/PaymentApprovalManagement"
+
 const AppointmentCalendarContent = () => {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
@@ -719,7 +726,7 @@ const SupplierChatContent = ({ companyInfo }) => {
 
   const generateRFQId = () => {
     const randomNum = Math.floor(10000 + Math.random() * 90000);
-    return `KRAUBEX-RFQ-${randomNum}`;
+    return `KRA-RFQ-${randomNum}`;
   };
 
   const [messages, setMessages] = useState([
@@ -1111,7 +1118,7 @@ const SupplierChatContent = ({ companyInfo }) => {
                       <button
                         onClick={() => handleAcceptRFQ(msg.id)}
                         className="flex-1 px-3 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700 transition-colors flex items-center justify-center gap-1"
-                      >
+                        >
                         <Check className="w-3 h-3" />
                         Accept
                       </button>
@@ -2696,11 +2703,51 @@ export default function KraubexSidebar() {
                 </div>
               </div>
 
-              {currentMode === 'manual' ? <ManualSearchContent /> : <AISearchContent />}
+              {/*{currentMode === 'manual' ? <ManualSearchContent /> : <AISearchContent />}*/}
+              {/* Only show search content for supplier keyword search */}
+              {activeSection === "home" && activeSubItem === "overview-dashboard" && (
+                         currentMode === "manual" ? <ManualSearchContent /> : <AISearchContent />
+              )}
+
+              {/* Only show search content for supplier keyword search */}
+              {activeSection === "suppliers" && activeSubItem === "keyword-search" && (
+                         currentMode === "manual" ? <ManualSearchContent /> : <AISearchContent />
+              )}
 
               {currentSubItem?.id === 'appointment-calendar' && <AppointmentCalendarContent />}
 
               {currentSubItem?.id === 'supplier-chat' && <SupplierChatContent />}
+
+              {/* Only show search content for supplier keyword search */}
+              {activeSection === "pricing" && activeSubItem === "quote-comparison" && (
+                         currentMode === "manual" ? <RFQComparison /> : <AISearchContent />
+              )}
+
+              {/* Only show search content for supplier keyword search */}
+              {activeSection === "team" && activeSubItem === "approval-workflows" && (
+                         currentMode === "manual" ? <ApprovalManagement /> : <AISearchContent />
+              )}
+
+              {/* Only show search content for supplier keyword search */}
+              {activeSection === "orders" && activeSubItem === "order-tracking" && (
+                         currentMode === "manual" ? <PurchaseOrderManagement /> : <AISearchContent />
+              )}
+
+              {/* Only show search content for supplier keyword search */}
+              {activeSection === "orders" && activeSubItem === "delivery-schedule" && (
+                         currentMode === "manual" ? <QualityControlManagement /> : <AISearchContent />
+              )}
+
+              {/* Only show search content for supplier keyword search */}
+              {activeSection === "orders" && activeSubItem === "invoice-matching" && (
+                         currentMode === "manual" ? <InvoiceMatchingManagement /> : <AISearchContent />
+              )}
+
+               {/* Only show search content for supplier keyword search */}
+              {activeSection === "team" && activeSubItem === "workflow-automation" && (
+                         currentMode === "manual" ? <PaymentApprovalManagement /> : <AISearchContent />
+              )}
+
             </>
           )}
         </div>
