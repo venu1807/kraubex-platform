@@ -4,6 +4,7 @@ import PurchaseOrderManagement from "../components/PurchaseOrderManagement"
 import QualityControlManagement from "../components/QualityControlManagement"
 import InvoiceMatchingManagement from "../components/InvoiceMatchingManagement"
 import PaymentApprovalManagement from "../components/PaymentApprovalManagement"
+import UserProfile from "../components/UserProfile"
 
 const AppointmentCalendarContent = () => {
   const [selectedDate, setSelectedDate] = useState('');
@@ -2407,17 +2408,8 @@ export default function KraubexSidebar() {
             );
           })}
 
-          <div className="mt-4 p-4 bg-gradient-to-r from-orange-50 to-red-50 rounded-xl border" style={{borderColor: COLORS.orange + '40'}}>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-orange-400 to-red-400 flex items-center justify-center text-white font-bold text-sm">
-                VA
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="text-sm font-medium text-gray-900 truncate">Venugopal Achhe</div>
-                <div className="text-xs text-gray-500 truncate">venugopal.achhe@kraubex.com</div>
-              </div>
-            </div>
-          </div>
+            {/* Replace the old profile div with ProfileDropdown component */}
+            <UserProfile />
         </div>
       </div>
 
