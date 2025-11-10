@@ -207,7 +207,7 @@ export default function OrdersInvoicesPage() {
   };
 
   return (
-    <div className="min-h-screen p-6" style={{backgroundColor: '#efeee7', fontFamily: 'Roboto'}}>
+    <div className="bg-white rounded-xl border-2 border-gray-300 p-6" style={{backgroundColor: '#efeee7', fontFamily: 'Roboto'}}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap');
       `}</style>
