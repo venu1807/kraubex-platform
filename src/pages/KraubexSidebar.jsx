@@ -5,6 +5,7 @@ import QualityControlManagement from "../components/QualityControlManagement"
 import InvoiceMatchingManagement from "../components/InvoiceMatchingManagement"
 import PaymentApprovalManagement from "../components/PaymentApprovalManagement"
 import UserProfile from "../components/UserProfile"
+import RFQManagement from "../components/RFQManagement"
 
 const AppointmentCalendarContent = () => {
   const [selectedDate, setSelectedDate] = useState('');
@@ -641,6 +642,7 @@ const sidebarData = [
     icon: Package,
     color: 'text-blue-700',
     subItems: [
+      { id: 'rfq-management', title: 'RFQ Management', icon: FileText, type: 'manual', description: 'RFQ status board' },
       { id: 'order-tracking', title: 'Order Tracking', icon: MapPin, type: 'manual', description: 'Real-time order status' },
       { id: 'smart-logistics', title: 'Smart Logistics', icon: Bot, type: 'agentic', description: 'AI-optimized delivery routing' },
       { id: 'delivery-schedule', title: 'Delivery Schedule', icon: Calendar, type: 'manual', description: 'Planned & actual deliveries' },
@@ -672,7 +674,7 @@ const sidebarData = [
       { id: 'team-dashboard', title: 'Team Dashboard', icon: Users, type: 'manual', description: 'Team performance & activities' },
       { id: 'collaboration-ai', title: 'Collaboration AI', icon: Bot, type: 'agentic', description: 'Smart team coordination' },
       { id: 'task-management', title: 'Task Management', icon: CheckSquare, type: 'manual', description: 'Assign & track tasks' },
-      { id: 'workflow-automation', title: 'Workflow Automation', icon: Brain, type: 'agentic', description: 'Intelligent process flows' },
+      { id: 'financial-workflows', title: 'Financial Workflows', icon: Brain, type: 'agentic', description: 'Intelligent finacial process flows' },
       { id: 'approval-workflows', title: 'Approval Workflows', icon: GitBranch, type: 'manual', description: 'Custom approval chains' },
       { id: 'smart-delegation', title: 'Smart Delegation', icon: Target, type: 'agentic', description: 'AI-based task assignment' },
       { id: 'appointment-calendar', title: 'Appointment Calendar', icon: Calendar, type: 'manual', description: 'Schedule supplier meetings' }
@@ -2662,7 +2664,7 @@ export default function KraubexSidebar() {
         </button>
       )}
 
-      <div className="flex-1 overflow-y-auto" style={{backgroundColor: COLORS.background}}>
+      <div className="flex-1 overflow-y-auto " style={{backgroundColor: COLORS.background}}>
         <div className="p-8">
           {currentSubItem && (
             <>
@@ -2712,7 +2714,7 @@ export default function KraubexSidebar() {
 
               {/* Only show search content for supplier keyword search */}
               {activeSection === "pricing" && activeSubItem === "quote-comparison" && (
-                         currentMode === "manual" ? <RFQComparison /> : <AISearchContent />
+                      currentMode === "manual" ? <RFQComparison /> : <AISearchContent />
               )}
 
               {/* Only show search content for supplier keyword search */}
@@ -2735,8 +2737,13 @@ export default function KraubexSidebar() {
                          currentMode === "manual" ? <InvoiceMatchingManagement /> : <AISearchContent />
               )}
 
+              {/* Only show search content for supplier keyword search */}
+              {activeSection === "orders" && activeSubItem === "rfq-management" && (
+                         currentMode === "manual" ? <RFQManagement /> : <AISearchContent />
+              )}
+
                {/* Only show search content for supplier keyword search */}
-              {activeSection === "team" && activeSubItem === "workflow-automation" && (
+              {activeSection === "team" && activeSubItem === "financial-workflows" && (
                          currentMode === "manual" ? <PaymentApprovalManagement /> : <AISearchContent />
               )}
 
