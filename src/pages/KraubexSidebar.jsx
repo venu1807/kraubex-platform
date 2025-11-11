@@ -7,6 +7,7 @@ import PaymentApprovalManagement from "../components/PaymentApprovalManagement"
 import UserProfile from "../components/UserProfile"
 import RFQManagement from "../components/RFQManagement"
 
+
 const AppointmentCalendarContent = () => {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
@@ -2742,7 +2743,7 @@ export default function KraubexSidebar() {
                          currentMode === "manual" ? <RFQManagement /> : <AISearchContent />
               )}
 
-               {/* Only show search content for supplier keyword search */}
+              {/* Only show search content for supplier keyword search */}
               {activeSection === "team" && activeSubItem === "financial-workflows" && (
                          currentMode === "manual" ? <PaymentApprovalManagement /> : <AISearchContent />
               )}
