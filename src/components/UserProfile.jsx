@@ -11,6 +11,7 @@ export default function ProfileDropdown() {
   const [avatar, setAvatar] = useState('VA');
   const [profileData, setProfileData] = useState({
     name: 'Venugopal Achhe',
+    empID: 'KRB-11112025',
     email: 'venugopal.achhe@kraubex.com',
     company: 'KraubexAI GmbH',
     role: 'Procurement Specialist',
@@ -108,6 +109,7 @@ export default function ProfileDropdown() {
                 <AvatarDisplay size="w-12 h-12" />
                 <div className="flex-1">
                   <div className="font-semibold text-gray-900">{profileData.name}</div>
+                  <div className="text-xs text-gray-600">{profileData.empID}</div>
                   <div className="text-xs text-gray-600">{profileData.role}</div>
                 </div>
               </div>

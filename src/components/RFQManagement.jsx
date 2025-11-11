@@ -15,7 +15,8 @@ import {
   ChevronDown,
   AlertCircle,
   TrendingUp,
-  Package
+  Package,
+  Trash2
 } from 'lucide-react';
 
 export default function OrdersInvoicesPage() {
@@ -185,6 +186,16 @@ export default function OrdersInvoicesPage() {
     pendingAmount: invoices.filter(i => i.paymentStatus === 'pending').reduce((sum, inv) => sum + inv.amount, 0),
     overdueAmount: invoices.filter(i => i.paymentStatus === 'overdue').reduce((sum, inv) => sum + inv.amount, 0)
   };
+
+
+  const handleDeleteInvoice = (invoiceId) => {
+  if (window.confirm("Are you sure you want to delete this invoice?")) {
+    setInvoices((prev) => prev.filter((inv) => inv.id !== invoiceId));
+    // Optionally call backend API here
+    // await deleteInvoiceFromServer(invoiceId);
+    }
+ };
+
 
   const formatCurrency = (amount, currency = '€') => {
     return `${currency}${amount.toLocaleString('de-DE')}`;
@@ -362,7 +373,7 @@ export default function OrdersInvoicesPage() {
         <div className="bg-white rounded-xl shadow overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b">
+              <thead className="bg-gray-50 border-b text-center">
                 <tr>
                    {/* Checkbox column */}
                   <th className="px-4 py-3">
@@ -388,16 +399,16 @@ export default function OrdersInvoicesPage() {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Amount
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Payment
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Due Date
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
@@ -418,7 +429,7 @@ export default function OrdersInvoicesPage() {
                         />
                       </td>
 
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4 whitespace-nowrap ">
                         <div>
                           <p className="text-sm font-semibold text-gray-900">{invoice.id}</p>
                           <p className="text-xs text-gray-500 font-mono">{invoice.rfqId}</p>
@@ -478,6 +489,14 @@ export default function OrdersInvoicesPage() {
                             title="Download Invoice"
                           >
                             <Download className="w-4 h-4" />
+                          </button>
+
+                          <button
+                            onClick={() => handleDeleteInvoice(invoice.id)}
+                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Delete Invoice"
+                          >
+                            <Trash2 className="w-4 h-4" />
                           </button>
                         </div>
                       </td>
