@@ -6,6 +6,10 @@ import InvoiceMatchingManagement from "../components/InvoiceMatchingManagement"
 import PaymentApprovalManagement from "../components/PaymentApprovalManagement"
 import UserProfile from "../components/UserProfile"
 import RFQManagement from "../components/RFQManagement"
+import InventoryManagement from "../components/InventoryManagement"
+import AISearchManagement from "../components/AISearchManagement"
+import SupplierContractManagement from "../components/SupplierContractManagement"
+import MovableAIChat from "../components/MovableAIChat"
 
 
 const AppointmentCalendarContent = () => {
@@ -305,7 +309,9 @@ const AppointmentCalendarContent = () => {
       </div>
     </div>
   );
-};import React, { useState, useCallback } from 'react';
+};
+
+import React, { useState, useCallback } from 'react';
 import {
   Home,
   Workflow,
@@ -602,8 +608,8 @@ const sidebarData = [
     color: 'text-orange-600',
     subItems: [
       { id: 'keyword-search', title: 'Keyword Search', icon: Search, type: 'manual', description: 'Search by company name, category' },
+      { id: 'supplier-contracts', title: 'Supplier Contract Management', icon: File, type: 'manual', description: 'Location, industry, certification' },
       { id: 'semantic-search', title: 'Semantic Search', icon: Bot, type: 'agentic', description: 'Natural language queries' },
-      { id: 'advanced-filters', title: 'Advanced Filters', icon: Filter, type: 'manual', description: 'Location, industry, certification' },
       { id: 'smart-matching', title: 'Smart Matching', icon: Target, type: 'agentic', description: 'AI-based supplier recommendations' },
       { id: 'supplier-directory', title: 'Supplier Directory', icon: Database, type: 'manual', description: 'Browse categorized suppliers' },
       { id: 'discovery-engine', title: 'Discovery Engine', icon: Zap, type: 'agentic', description: 'Find hidden supplier opportunities' }
@@ -2182,101 +2188,6 @@ const ManualSearchContent = () => {
 
 
 
-const AISearchContent = () => (
-  <div className="space-y-6">
-    {/* AI Chat Interface */}
-    <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl border-2 border-purple-200 p-6">
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 flex items-center justify-center">
-          <Sparkles className="w-6 h-6 text-white" />
-        </div>
-        <div>
-          <h3 className="font-bold text-gray-900">AI Search Assistant</h3>
-          <p className="text-sm text-gray-600">Ask me anything about suppliers...</p>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-lg p-4 mb-4 border border-purple-200">
-        <textarea
-          placeholder="E.g., 'Find steel suppliers in Germany with ISO certification' or 'Show me renewable energy companies with good ratings'..."
-          className="w-full outline-none resize-none text-gray-700"
-          rows="3"
-        />
-
-        {/* Attachment Options */}
-        <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-200">
-          <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors group relative" title="Attach File">
-            <Paperclip className="w-4 h-4 text-gray-600 group-hover:text-purple-600" />
-          </button>
-          <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors group relative" title="Upload Image">
-            <Image className="w-4 h-4 text-gray-600 group-hover:text-purple-600" />
-          </button>
-          <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors group relative" title="Attach Document">
-            <File className="w-4 h-4 text-gray-600 group-hover:text-purple-600" />
-          </button>
-          <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors group relative" title="Record Audio">
-            <Mic className="w-4 h-4 text-gray-600 group-hover:text-purple-600" />
-          </button>
-          <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors group relative" title="Record Video">
-            <Video className="w-4 h-4 text-gray-600 group-hover:text-purple-600" />
-          </button>
-          <div className="flex-1"></div>
-          <span className="text-xs text-gray-500">Attachments supported</span>
-        </div>
-      </div>
-
-      <div className="flex gap-3">
-        <button className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:opacity-90 transition-opacity font-medium flex items-center justify-center gap-2">
-          <Send className="w-5 h-5" />
-          Ask AI
-        </button>
-        <button className="px-6 py-3 bg-white border-2 border-purple-300 text-purple-700 rounded-lg hover:bg-purple-50 transition-colors font-medium">
-          Clear
-        </button>
-      </div>
-    </div>
-
-    {/* AI Suggestions */}
-    <div className="bg-white rounded-xl border-2 border-gray-300 p-6">
-      <h3 className="text-lg font-bold mb-4 flex items-center gap-2" style={{color: COLORS.primary}}>
-        <Brain className="w-5 h-5" />
-        Smart Recommendations
-      </h3>
-      <div className="space-y-3">
-        {[
-          'Top-rated steel suppliers in your region',
-          'Companies with recent positive reviews',
-          'Suppliers matching your budget range',
-          'New suppliers in your industry'
-        ].map((suggestion, i) => (
-          <button
-            key={i}
-            className="w-full text-left p-4 bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg hover:bg-purple-100 transition-colors"
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-gray-800">{suggestion}</span>
-              <Sparkles className="w-4 h-4 text-purple-500" />
-            </div>
-          </button>
-        ))}
-      </div>
-    </div>
-
-    {/* AI Insights */}
-    <div className="bg-white rounded-xl border-2 border-gray-300 p-6">
-      <h3 className="text-lg font-bold mb-4" style={{color: COLORS.primary}}>AI-Generated Insights</h3>
-      <div className="space-y-4">
-        <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <p className="text-sm text-gray-700"><strong>Trend Alert:</strong> Steel prices expected to decrease by 5% next quarter based on market analysis.</p>
-        </div>
-        <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-          <p className="text-sm text-gray-700"><strong>Opportunity:</strong> 3 new certified suppliers match your requirements with competitive pricing.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
 export default function KraubexSidebar() {
   const [activeSection, setActiveSection] = useState('suppliers');
   const [activeSubItem, setActiveSubItem] = useState('keyword-search');
@@ -2701,12 +2612,12 @@ export default function KraubexSidebar() {
               {/*{currentMode === 'manual' ? <ManualSearchContent /> : <AISearchContent />}*/}
               {/* Only show search content for supplier keyword search */}
               {activeSection === "home" && activeSubItem === "overview-dashboard" && (
-                         currentMode === "manual" ? <ManualSearchContent /> : <AISearchContent />
+                         currentMode === "manual" ? <ManualSearchContent /> : <AISearchManagement />
               )}
 
               {/* Only show search content for supplier keyword search */}
               {activeSection === "suppliers" && activeSubItem === "keyword-search" && (
-                         currentMode === "manual" ? <ManualSearchContent /> : <AISearchContent />
+                         currentMode === "manual" ? <ManualSearchContent /> : <AISearchManagement />
               )}
 
               {currentSubItem?.id === 'appointment-calendar' && <AppointmentCalendarContent />}
@@ -2715,37 +2626,48 @@ export default function KraubexSidebar() {
 
               {/* Only show search content for supplier keyword search */}
               {activeSection === "pricing" && activeSubItem === "quote-comparison" && (
-                      currentMode === "manual" ? <RFQComparison /> : <AISearchContent />
+                      currentMode === "manual" ? <RFQComparison /> : <AISearchManagement />
               )}
 
               {/* Only show search content for supplier keyword search */}
               {activeSection === "team" && activeSubItem === "approval-workflows" && (
-                         currentMode === "manual" ? <ApprovalManagement /> : <AISearchContent />
+                         currentMode === "manual" ? <ApprovalManagement /> : <AISearchManagement />
               )}
 
               {/* Only show search content for supplier keyword search */}
               {activeSection === "orders" && activeSubItem === "order-tracking" && (
-                         currentMode === "manual" ? <PurchaseOrderManagement /> : <AISearchContent />
+                         currentMode === "manual" ? <PurchaseOrderManagement /> : <AISearchManagement />
               )}
 
               {/* Only show search content for supplier keyword search */}
               {activeSection === "orders" && activeSubItem === "delivery-schedule" && (
-                         currentMode === "manual" ? <QualityControlManagement /> : <AISearchContent />
+                         currentMode === "manual" ? <QualityControlManagement /> : <AISearchManagement />
               )}
 
               {/* Only show search content for supplier keyword search */}
               {activeSection === "orders" && activeSubItem === "invoice-matching" && (
-                         currentMode === "manual" ? <InvoiceMatchingManagement /> : <AISearchContent />
+                         currentMode === "manual" ? <InvoiceMatchingManagement /> : <AISearchManagement />
               )}
 
-              {/* Only show search content for supplier keyword search */}
+              {/* Only show search content for supplier keyword search*/}
               {activeSection === "orders" && activeSubItem === "rfq-management" && (
-                         currentMode === "manual" ? <RFQManagement /> : <AISearchContent />
+                         currentMode === "manual" ? <RFQManagement /> : <AISearchManagement />
               )}
+
 
               {/* Only show search content for supplier keyword search */}
               {activeSection === "team" && activeSubItem === "financial-workflows" && (
-                         currentMode === "manual" ? <PaymentApprovalManagement /> : <AISearchContent />
+                         currentMode === "manual" ? <PaymentApprovalManagement /> : <AISearchManagement />
+              )}
+
+              {/* Only show search content for supplier keyword search */}
+              {activeSection === "suppliers" && activeSubItem === "supplier-contracts" && (
+                         currentMode === "manual" ? <SupplierContractManagement /> : <AISearchManagement />
+              )}
+
+              {/* Only show search content for supplier keyword search */}
+              {activeSection === "orders" && activeSubItem === "smart-logistics" && (
+                         currentMode === "manual" ? <InventoryManagement /> : <AISearchManagement />
               )}
 
             </>
