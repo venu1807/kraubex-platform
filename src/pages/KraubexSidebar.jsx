@@ -1,3 +1,27 @@
+import React, { useState, useCallback } from 'react';
+
+import {Home, Workflow, Layers, Search, BarChart3, Euro, Package,
+  Shield, Users, MessageCircle, Settings, HelpCircle, Bot, Hand, Zap,
+  Brain, Target, Database, TrendingUp, AlertTriangle, FileText, Calendar,
+  Clock, Filter, Eye, Cpu, PieChart, MapPin, Check, FileCheck, TrendingDown,
+  CheckSquare, GitBranch, MessageSquare, Building, Calculator, Bell, Lock,
+  ShieldCheck, PlayCircle, Ticket, Send, Sparkles, ListFilter, Grid3x3, BarChart2,
+  Download, Upload, Plus, X, ChevronLeft, ChevronRight, Paperclip, Mic, Video, Image,
+  File, FileUp, Edit, XCircle, Rocket, Star, Activity, Briefcase, CheckCircle2, Play,
+  Pause, RotateCw, Phone, MicOff, Smile, Share2, Trash2, Mail, ChevronDown, ChevronUp,
+  Award, DownloadCloud, GitMerge, RefreshCw, ExternalLink } from 'lucide-react';
+
+import kraubexLogo from "../assets/kraubex-logo.png";
+import { Link } from "react-router-dom";
+
+const COLORS = {
+  primary: '#c04000',
+  background: '#efeee7',
+  text: '#292d32',
+  orange: '#c04000'
+};
+
+
 import RFQComparison from "../components/RFQComparison";
 import ApprovalManagement from "../components/ApprovalManagement"
 import PurchaseOrderManagement from "../components/PurchaseOrderManagement"
@@ -9,7 +33,6 @@ import RFQManagement from "../components/RFQManagement"
 import InventoryManagement from "../components/InventoryManagement"
 import AISearchManagement from "../components/AISearchManagement"
 import SupplierContractManagement from "../components/SupplierContractManagement"
-import MovableAIChat from "../components/MovableAIChat"
 
 
 const AppointmentCalendarContent = () => {
@@ -311,99 +334,6 @@ const AppointmentCalendarContent = () => {
   );
 };
 
-import React, { useState, useCallback } from 'react';
-import {
-  Home,
-  Workflow,
-  Layers,
-  Search,
-  BarChart3,
-  Euro,
-  Package,
-  Shield,
-  Users,
-  MessageCircle,
-  Settings,
-  HelpCircle,
-  Bot,
-  Hand,
-  Zap,
-  Brain,
-  Target,
-  Database,
-  TrendingUp,
-  AlertTriangle,
-  FileText,
-  Calendar,
-  Clock,
-  Filter,
-  Eye,
-  Cpu,
-  PieChart,
-  MapPin,
-  Check,
-  FileCheck,
-  TrendingDown,
-  CheckSquare,
-  GitBranch,
-  MessageSquare,
-  Building,
-  Calculator,
-  Bell,
-  Lock,
-  ShieldCheck,
-  PlayCircle,
-  Ticket,
-  Send,
-  Sparkles,
-  ListFilter,
-  Grid3x3,
-  BarChart2,
-  Download,
-  Upload,
-  Plus,
-  X,
-  ChevronLeft,
-  ChevronRight,
-  Paperclip,
-  Mic,
-  Video,
-  Image,
-  File,
-  FileUp,
-  Edit,
-  XCircle,
-  Rocket,
-  Star,
-  Activity,
-  Briefcase,
-  CheckCircle2,
-  Play,
-  Pause,
-  RotateCw,
-  Phone,
-  MicOff,
-  Smile,
-  Share2,
-  Trash2,
-  Mail,
-  ChevronDown,
-  ChevronUp,
-  Award,
-  DownloadCloud,
-  GitMerge,
-  RefreshCw,
-  ExternalLink
-} from 'lucide-react';
-import kraubexLogo from "../assets/kraubex-logo.png";
-import { Link } from "react-router-dom";
-
-const COLORS = {
-  primary: '#c04000',
-  background: '#efeee7',
-  text: '#292d32',
-  orange: '#c04000'
-};
 
 // Procurement Agents Data
 const procurementAgents = [
@@ -2593,7 +2523,7 @@ export default function KraubexSidebar() {
                     currentMode === 'agentic'
                       ? 'bg-gradient-to-r from-purple-100 to-blue-100 text-purple-700 border-2 border-purple-300'
                       : 'bg-gray-100 text-gray-700 border-2 border-gray-300'
-                  }`}>
+                    }`}>
                     {currentMode === 'agentic' ? (
                       <>
                         <Bot className="w-4 h-4" />
@@ -2609,15 +2539,32 @@ export default function KraubexSidebar() {
                 </div>
               </div>
 
-              {/*{currentMode === 'manual' ? <ManualSearchContent /> : <AISearchContent />}*/}
-              {/* Only show search content for supplier keyword search */}
-              {activeSection === "home" && activeSubItem === "overview-dashboard" && (
-                         currentMode === "manual" ? <ManualSearchContent /> : <AISearchManagement />
+
+
+             {activeSection === "home" && activeSubItem === "overview-dashboard" && (
+              <>
+                {/* Main Dashboard - Always show */}
+                <ManualSearchContent />
+              </>
+               )}
+
+            {/* AI Chat Overlay - Only show in agentic mode */}
+            {currentMode === "agentic" && (
+              <AISearchManagement
+                  dashboardData={{ type: "Overview Dashboard" }}
+                  onClose={() => {
+                    console.log("Parent onClose called");
+                    setSubItemMode(currentSubItem.id, currentSubItem.type, "manual");
+                    // if you use a separate local boolean, also close it explicitly:
+                    // setShowMovableChat(false);
+                  }}
+                />
               )}
+
 
               {/* Only show search content for supplier keyword search */}
               {activeSection === "suppliers" && activeSubItem === "keyword-search" && (
-                         currentMode === "manual" ? <ManualSearchContent /> : <AISearchManagement />
+                          <ManualSearchContent />
               )}
 
               {currentSubItem?.id === 'appointment-calendar' && <AppointmentCalendarContent />}
@@ -2626,48 +2573,48 @@ export default function KraubexSidebar() {
 
               {/* Only show search content for supplier keyword search */}
               {activeSection === "pricing" && activeSubItem === "quote-comparison" && (
-                      currentMode === "manual" ? <RFQComparison /> : <AISearchManagement />
+                          <RFQComparison />
               )}
 
               {/* Only show search content for supplier keyword search */}
               {activeSection === "team" && activeSubItem === "approval-workflows" && (
-                         currentMode === "manual" ? <ApprovalManagement /> : <AISearchManagement />
+                          <ApprovalManagement />
               )}
 
               {/* Only show search content for supplier keyword search */}
               {activeSection === "orders" && activeSubItem === "order-tracking" && (
-                         currentMode === "manual" ? <PurchaseOrderManagement /> : <AISearchManagement />
+                          <PurchaseOrderManagement />
               )}
 
               {/* Only show search content for supplier keyword search */}
               {activeSection === "orders" && activeSubItem === "delivery-schedule" && (
-                         currentMode === "manual" ? <QualityControlManagement /> : <AISearchManagement />
+                          <QualityControlManagement />
               )}
 
               {/* Only show search content for supplier keyword search */}
               {activeSection === "orders" && activeSubItem === "invoice-matching" && (
-                         currentMode === "manual" ? <InvoiceMatchingManagement /> : <AISearchManagement />
+                          <InvoiceMatchingManagement />
               )}
 
               {/* Only show search content for supplier keyword search*/}
               {activeSection === "orders" && activeSubItem === "rfq-management" && (
-                         currentMode === "manual" ? <RFQManagement /> : <AISearchManagement />
+                          <RFQManagement />
               )}
 
 
               {/* Only show search content for supplier keyword search */}
               {activeSection === "team" && activeSubItem === "financial-workflows" && (
-                         currentMode === "manual" ? <PaymentApprovalManagement /> : <AISearchManagement />
+                          <PaymentApprovalManagement />
               )}
 
               {/* Only show search content for supplier keyword search */}
               {activeSection === "suppliers" && activeSubItem === "supplier-contracts" && (
-                         currentMode === "manual" ? <SupplierContractManagement /> : <AISearchManagement />
+                          <SupplierContractManagement />
               )}
 
               {/* Only show search content for supplier keyword search */}
               {activeSection === "orders" && activeSubItem === "smart-logistics" && (
-                         currentMode === "manual" ? <InventoryManagement /> : <AISearchManagement />
+                          <InventoryManagement />
               )}
 
             </>

@@ -2,9 +2,9 @@ import { useState, useRef } from "react";
 import AISearchManagement from "./AISearchManagement";
 import { X } from "lucide-react";
 
-export default function MovableAIChat({ dashboardData }) {
+export default function MovableAIChat({ dashboardData, onClose }) {  // ✅ added onClose prop
   const [position, setPosition] = useState({ top: 100, left: 100 });
-  const [size, setSize] = useState({ width: 700, height: 500 });
+  const [size, setSize] = useState({ width: 1000, height: 700 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [isResizing, setIsResizing] = useState(false);
@@ -40,8 +40,8 @@ export default function MovableAIChat({ dashboardData }) {
       }
 
       setSize({
-        width: Math.max(newSize.width, 400),
-        height: Math.max(newSize.height, 300),
+        width: Math.max(newSize.width, 800),
+        height: Math.max(newSize.height, 400),
       });
     }
   };
@@ -79,17 +79,25 @@ export default function MovableAIChat({ dashboardData }) {
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
-      className="bg-white border border-gray-300 shadow-2xl rounded-lg overflow-hidden"
+      className="bg-white border border-gray-300 shadow-2xl rounded-lg overflow-hidden resize"
     >
       {/* Header for Dragging */}
       <div
         onMouseDown={handleMouseDownDrag}
         className="flex justify-between items-center bg-blue-600 text-white p-3 cursor-grab select-none"
       >
-        <span className="font-semibold">Kraubex AI Assistant</span>
-        <button className="hover:text-gray-300">
+        <span className="font-semibold block w-full text-center">Welcome to KraubexAI </span>
+        <button
+          onMouseDown={(e) => e.stopPropagation()}      // prevent drag stealing the click
+          onClick={() => {
+            console.log("MovableAIChat: close clicked");
+            if (onClose) onClose();
+          }}
+          className="hover:text-gray-300"
+          >
           <X className="w-5 h-5" />
         </button>
+
       </div>
 
       {/* Main Content */}
@@ -98,8 +106,16 @@ export default function MovableAIChat({ dashboardData }) {
       </div>
 
       {/* Resize Handles */}
-      {["top", "bottom", "left", "right",
-        "top-left", "top-right", "bottom-left", "bottom-right"].map((dir) => (
+      {[
+        "top",
+        "bottom",
+        "left",
+        "right",
+        "top-left",
+        "top-right",
+        "bottom-left",
+        "bottom-right",
+      ].map((dir) => (
         <div
           key={dir}
           onMouseDown={(e) => handleMouseDownResize(e, dir)}

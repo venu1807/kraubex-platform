@@ -1,188 +1,460 @@
-import { useState } from "react";
-import {
-  Sparkles,
-  Paperclip,
-  Image,
-  File,
-  Mic,
-  Video,
-  Plus,
-  Send,
-  Brain,
-  Database,
-  Globe,
-  BarChart, TrendingUp, Eye, Zap
-} from "lucide-react";
+import { useState, useRef, useEffect } from 'react';
+import { Plus, Send, X, Minimize2, Maximize2, Paperclip, File, Database, Image, Search, MessageSquare, MessageCircle, Sparkles, Trash2, Globe, Menu } from 'lucide-react';
+import KraubexLogo from "../assets/kraubex-logo.png";
 
+const COLORS = {
+  primary: '#c04000',
+  background: '#efeee7',
+  text: '#292d32',
+  orange: '#c04000'
+};
 
-
-const COLORS = { primary: '#6b46c1' };
-
-const AISearchContent = () => {
+export default function AgentChatArea() {
   const [input, setInput] = useState("");
-  const [showMediaMenu, setShowMediaMenu] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [isMaximized, setIsMaximized] = useState(false);
+  const [chats, setChats] = useState([
+    { id: 1, name: "Chat with KraubexAI", messages: [] },
+    { id: 2, name: "Supplier Data Query", messages: [] },
+  ]);
+
+  const [position, setPosition] = useState({ x: 100, y: 80 });
+  const [size, setSize] = useState({ width: 850, height: 650 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [isResizing, setIsResizing] = useState({ active: false });
+  const [resizeStart, setResizeStart] = useState({ x: 0, y: 0, width: 0, height: 0 });
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeChatId, setActiveChatId] = useState(1);
+  const [isTyping, setIsTyping] = useState(false);
+
+  const chatEndRef = useRef(null);
 
   const prePrompts = [
-    "Show low stock items",
-    "Generate monthly report",
-    "Compare suppliers",
-    "Create purchase order"
+    "Find steel suppliers in Germany",
+    "Who offers lowest price for copper?",
+    "Top ERP integrations for MSMEs",
+    "Audit supplier compliance",
   ];
 
-  const handleAskAI = () => {
-    console.log("Ask AI:", input);
-    setInput("");
+  const handleMouseDownMove = (e) => {
+    if (isMaximized) return;
+    setIsDragging(true);
+    setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y });
   };
 
-  const handleClear = () => setInput("");
+  const handleMouseMove = (e) => {
+    if (isDragging) {
+      setPosition({ x: e.clientX - dragStart.x, y: e.clientY - dragStart.y });
+    }
+    if (isResizing.active) {
+      const newWidth = Math.max(400, resizeStart.width + (e.clientX - resizeStart.x));
+      const newHeight = Math.max(300, resizeStart.height + (e.clientY - resizeStart.y));
+      setSize({ width: newWidth, height: newHeight });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    setIsResizing({ active: false });
+  };
+
+  useEffect(() => {
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  });
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chats, activeChatId]);
+
+  const handleAskAI = () => {
+    if (!input.trim()) return;
+
+    const userMessage = { id: Date.now(), text: input, from: "user" };
+
+    setChats((prev) =>
+      prev.map((chat) =>
+        chat.id === activeChatId
+          ? { ...chat, messages: [...chat.messages, userMessage] }
+          : chat
+      )
+    );
+    setInput("");
+    setIsTyping(true);
+
+    setTimeout(() => {
+      const aiMessage = {
+        id: Date.now() + 1,
+        text: `Based on your query "${userMessage.text}", I've analyzed our supplier database. Here are some relevant insights and recommendations tailored to your needs.`,
+        from: "ai"
+      };
+
+      setChats((prev) =>
+        prev.map((chat) =>
+          chat.id === activeChatId
+            ? { ...chat, messages: [...chat.messages, aiMessage] }
+            : chat
+        )
+      );
+      setIsTyping(false);
+    }, 1500);
+  };
+
+  const handleDeleteChat = (id) => {
+    const updated = chats.filter((chat) => chat.id !== id);
+    setChats(updated);
+    if (activeChatId === id && updated.length > 0) {
+      setActiveChatId(updated[0].id);
+    }
+  };
+
+  const filteredChats = chats.filter((chat) =>
+    chat.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const activeChat = chats.find((c) => c.id === activeChatId);
 
   return (
-    <div className="space-y-6">
-      {/* AI Chat Interface */}
-      <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl border-2 border-purple-200 p-6">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 flex items-center justify-center">
-            <Sparkles className="w-6 h-6 text-white" />
+    <div
+      className={`fixed shadow-2xl border border-gray-300 transition-all duration-300 ${
+        isMaximized ? "top-0 left-0 w-screen h-screen rounded-none" : "rounded-xl"
+      }`}
+      style={{
+        top: isMaximized ? 0 : position.y,
+        left: isMaximized ? 0 : position.x,
+        width: isMaximized ? "100vw" : size.width,
+        height: isMaximized ? "100vh" : size.height,
+        zIndex: 9999,
+        backgroundColor: COLORS.background,
+      }}
+    >
+      <div
+        className="flex items-center justify-between px-4 py-3 cursor-move select-none"
+        style={{
+          backgroundColor: COLORS.background,
+          borderBottom: `4px solid ${COLORS.primary}`,
+          borderRadius: '12px 12px 0 0'
+        }}
+        onMouseDown={handleMouseDownMove}
+      >
+        <span className="font-semibold flex items-center gap-2" style={{ color: COLORS.text }}>
+          <div className="w-6 h-6 rounded flex items-center justify-center" style={{ background: `linear-gradient(to bottom right, ${COLORS.primary}, ${COLORS.orange})` }}>
+            {/*<Sparkles className="w-4 h-4 text-white" />*/}
+            <img src={KraubexLogo} alt="Kraubex Logo" className="w-32 h-auto" />
           </div>
-          <div>
-            <h3 className="font-bold text-gray-900">KraubexAI Search Agent</h3>
-            <p className="text-sm text-gray-600">Ask me anything about suppliers...</p>
-          </div>
+          KraubexAI
+        </span>
+        <div className="flex gap-1">
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            title={isSidebarOpen ? "Hide Sidebar" : "Show Sidebar"}
+            className="w-8 h-8 flex items-center justify-center rounded transition-colors"
+            style={{ color: COLORS.text }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d9d8d0'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+          >
+            <Menu className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => setIsMinimized(!isMinimized)}
+            title="Minimize"
+            className="w-8 h-8 flex items-center justify-center rounded transition-colors"
+            style={{ color: COLORS.text }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d9d8d0'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+          >
+            <Minimize2 className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => setIsMaximized(!isMaximized)}
+            title="Maximize"
+            className="w-8 h-8 flex items-center justify-center rounded transition-colors"
+            style={{ color: COLORS.text }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d9d8d0'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+          >
+            <Maximize2 className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => alert("Closing chat...")}
+            title="Close"
+            className="w-8 h-8 flex items-center justify-center rounded transition-colors"
+            style={{ color: COLORS.text }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d9d8d0'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+          >
+            <X className="w-4 h-4" />
+          </button>
         </div>
+      </div>
 
-        <div className="bg-white rounded-lg p-4 mb-4 border border-purple-200">
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="E.g., 'Find steel suppliers in Germany with ISO certification'..."
-            className="w-full outline-none resize-none text-gray-700 rounded-lg p-2 border border-gray-200 focus:ring-2 focus:ring-purple-400"
-            rows="3"
-          />
-
-        {/* Attachment + ERP + Web */}
-        <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-200">
-          <div className="flex items-center gap-2">
-            {/* File Icon */}
-            <button
-              title="Attach File"
-              className="w-10 h-10 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-            >
-              <Paperclip className="w-5 h-5 text-gray-600" />
-            </button>
-
-            {/* Media Plus Menu */}
-            <div className="relative">
+      {!isMinimized && (
+        <div className="flex h-full relative">
+          <div
+            className={`transition-all duration-300 ease-in-out ${
+              isSidebarOpen ? "w-64 p-4 opacity-100" : "w-0 p-0 opacity-0"
+            } border-r border-gray-300 flex flex-col overflow-hidden`}
+            style={{ backgroundColor: '#e8e7df' }}
+          >
+            <div className="flex flex-col gap-3 mb-4">
               <button
-                onClick={() => setShowMediaMenu(!showMediaMenu)}
-                title="Add Media"
-                className="w-10 h-10 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+                onClick={() => {
+                  const newChat = { id: Date.now(), name: `New Chat`, messages: [] };
+                  setChats([newChat, ...chats]);
+                  setActiveChatId(newChat.id);
+                }}
+                className="w-full border rounded-lg py-2 text-sm font-medium transition-colors flex items-center justify-center gap-2"
+                style={{
+                  backgroundColor: COLORS.background,
+                  borderColor: COLORS.primary,
+                  color: COLORS.text
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d9d8d0'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = COLORS.background}
               >
-                <Plus className="w-5 h-5 text-gray-600" />
+                <Plus className="w-4 h-4" />
+                New chat
               </button>
-              {showMediaMenu && (
-                <div className="absolute top-12 left-0 bg-white border rounded shadow p-2 flex flex-col gap-2 z-50">
-                  <button className="flex items-center gap-2 px-2 py-1 hover:text-purple-600"><Image className="w-4 h-4" /> Image</button>
-                  <button className="flex items-center gap-2 px-2 py-1 hover:text-purple-600"><Mic className="w-4 h-4" /> Audio</button>
-                  <button className="flex items-center gap-2 px-2 py-1 hover:text-purple-600"><Video className="w-4 h-4" /> Video</button>
+
+              <div className="relative w-full">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4" style={{ color: '#6b6b6b' }} />
+                <input
+                  type="text"
+                  placeholder="Search chats..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-9 pr-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent"
+                  style={{
+                    backgroundColor: COLORS.background,
+                    color: COLORS.text
+                  }}
+                />
+              </div>
+            </div>
+
+            <div className="flex-1 overflow-y-auto space-y-1">
+              {filteredChats.map((chat) => (
+                <div
+                  key={chat.id}
+                  className="group flex justify-between items-center px-3 py-2 rounded-lg cursor-pointer transition-colors"
+                  style={{
+                    backgroundColor: chat.id === activeChatId ? '#d9d8d0' : 'transparent'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (chat.id !== activeChatId) e.currentTarget.style.backgroundColor = '#dddcd3';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (chat.id !== activeChatId) e.currentTarget.style.backgroundColor = 'transparent';
+                  }}
+                  onClick={() => setActiveChatId(chat.id)}
+                >
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <MessageCircle className="w-4 h-4 flex-shrink-0" style={{ color: '#6b6b6b' }} />
+                    <span className="text-sm truncate" style={{ color: COLORS.text }}>{chat.name}</span>
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteChat(chat.id);
+                    }}
+                    className="opacity-0 group-hover:opacity-100 p-1 rounded transition-opacity"
+                    style={{ color: '#6b6b6b' }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d9d8d0'}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                    title="Delete Chat"
+                  >
+                    <Trash2 className="w-4 h-4 text-red-700" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex-1 flex flex-col" style={{ backgroundColor: COLORS.background }}>
+            <div className="px-6 py-4 border-b border-gray-300">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded flex items-center justify-center flex-shrink-0" style={{ background: `linear-gradient(to bottom right, ${COLORS.primary}, ${COLORS.orange})` }}>
+                  {/* <Sparkles className="w-5 h-5 text-white" /> */}
+                  <img src={KraubexLogo} alt="Kraubex Logo" className="w-32 h-auto" />
+                </div>
+                <div>
+                  <h3 className="font-semibold" style={{ color: COLORS.text }}>KraubexAI</h3>
+                  <p className="text-xs" style={{ color: '#6b6b6b' }}>Your Smart Procurement Specialist</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex-1 overflow-y-auto px-6 py-4">
+              {activeChat?.messages.length === 0 ? (
+                <div className="h-full flex flex-col items-center justify-center text-center px-4">
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4" style={{ background: `linear-gradient(to bottom right, rgba(192, 64, 0, 0.1), rgba(192, 64, 0, 0.2))` }}>
+                    {/* <Sparkles className="w-8 h-8" style={{ color: COLORS.primary }} /> */}
+                    <img src={KraubexLogo} alt="Kraubex Logo" className="w-32 h-auto" />
+                  </div>
+                  <h2 className="text-2xl font-semibold mb-2" style={{ color: COLORS.text }}>How can I help you today?</h2>
+                  <p className="mb-6 max-w-md" style={{ color: '#6b6b6b' }}>
+                    I can help you find suppliers, analyze data, check compliance, and more.
+                  </p>
+                  <div className="grid grid-cols-2 gap-3 max-w-2xl w-full">
+                    {prePrompts.map((prompt, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setInput(prompt)}
+                        className="p-4 border border-gray-300 rounded-xl text-left transition-colors group"
+                        style={{ backgroundColor: '#e8e7df' }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d9d8d0'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#e8e7df'}
+                      >
+                        <div className="flex items-start gap-2">
+                          <Sparkles className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: COLORS.primary }} />
+                          <span className="text-sm group-hover:opacity-90" style={{ color: COLORS.text }}>{prompt}</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-6 max-w-3xl mx-auto">
+                  {activeChat?.messages.map((msg) => (
+                    <div key={msg.id} className="flex gap-4">
+                      {msg.from === "ai" && (
+                        <div className="w-8 h-8 rounded flex items-center justify-center flex-shrink-0" style={{ background: `linear-gradient(to bottom right, ${COLORS.primary}, ${COLORS.orange})` }}>
+                          <Sparkles className="w-5 h-5 text-white" />
+                        </div>
+                      )}
+                      <div className={`flex-1 ${msg.from === "user" ? "ml-auto max-w-xl" : ""}`}>
+                        <div className={`${msg.from === "user" ? "rounded-2xl px-4 py-3" : ""}`} style={msg.from === "user" ? { backgroundColor: '#e8e7df' } : {}}>
+                          <p className="leading-relaxed" style={{ color: COLORS.text }}>{msg.text}</p>
+                        </div>
+                      </div>
+                      {msg.from === "user" && (
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium flex-shrink-0" style={{ backgroundColor: COLORS.primary }}>
+                          You
+                        </div>
+                      )}
+                    </div>
+                  ))}
+
+                  {isTyping && (
+                    <div className="flex gap-4">
+                      <div className="w-8 h-8 rounded flex items-center justify-center flex-shrink-0" style={{ background: `linear-gradient(to bottom right, ${COLORS.primary}, ${COLORS.orange})` }}>
+                        <Sparkles className="w-5 h-5 text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex gap-1 items-center">
+                          <div className="w-2 h-2 rounded-full animate-bounce" style={{ backgroundColor: '#6b6b6b', animationDelay: '0ms' }}></div>
+                          <div className="w-2 h-2 rounded-full animate-bounce" style={{ backgroundColor: '#6b6b6b', animationDelay: '150ms' }}></div>
+                          <div className="w-2 h-2 rounded-full animate-bounce" style={{ backgroundColor: '#6b6b6b', animationDelay: '300ms' }}></div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  <div ref={chatEndRef}></div>
                 </div>
               )}
             </div>
 
-            {/* Document Icon */}
-            <button
-              title="Attach Document"
-              className="w-10 h-10 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-            >
-              <File className="w-5 h-5 text-gray-600" />
-            </button>
+            <div className="border-t border-gray-300 p-4">
+              <div className="max-w-3xl mx-auto">
+                <div className="rounded-xl border border-gray-300 transition-all" style={{ backgroundColor: COLORS.background }}>
+                  <textarea
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        handleAskAI();
+                      }
+                    }}
+                    placeholder="Ask me anything about suppliers, compliance, pricing..."
+                    className="w-full outline-none resize-none rounded-xl px-4 py-3 min-h-[60px] max-h-[200px]"
+                    style={{
+                      backgroundColor: COLORS.background,
+                      color: COLORS.text
+                    }}
+                    rows={1}
+                  />
 
-            {/* ERP Database */}
-            <button
-              title="ERP Database Query"
-              className="w-10 h-10 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-            >
-              <Database className="w-5 h-5 text-gray-600" />
-            </button>
+                  <div className="flex items-center justify-between px-4 pb-3">
+                    <div className="flex items-center gap-1">
+                      {[Paperclip, Image, File, Database, Globe].map((Icon, idx) => (
+                        <button
+                          key={idx}
+                          className="w-8 h-8 flex items-center justify-center rounded-lg transition-colors"
+                          style={{ color: '#6b6b6b' }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.color = COLORS.orange;
+                            e.currentTarget.style.backgroundColor = '#d9d8d0';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.color = '#6b6b6b';
+                            e.currentTarget.style.backgroundColor = 'transparent';
+                          }}
+                          title={`Add ${Icon.name}`}
+                        >
+                          <Icon className="w-4 h-4" />
+                        </button>
+                      ))}
+                    </div>
 
-            {/* Web Search */}
-            <button
-              title="Web Search"
-              className="w-10 h-10 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-            >
-              <Globe className="w-5 h-5 text-gray-600" />
-            </button>
+                    <button
+                      onClick={handleAskAI}
+                      disabled={!input.trim()}
+                      className="px-4 py-2 rounded-lg font-medium transition-all flex items-center gap-2"
+                      style={{
+                        backgroundColor: input.trim() ? COLORS.primary : '#d9d8d0',
+                        color: input.trim() ? 'white' : '#9b9b9b',
+                        cursor: input.trim() ? 'pointer' : 'not-allowed'
+                      }}
+                      onMouseEnter={(e) => {
+                        if (input.trim()) {
+                          e.currentTarget.style.backgroundColor = '#a83600';
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (input.trim()) {
+                          e.currentTarget.style.backgroundColor = COLORS.primary;
+                        }
+                      }}
+                    >
+                      <Send className="w-4 h-4" />
+                      Send
+                    </button>
+                  </div>
+                </div>
+
+                <p className="text-xs text-center mt-2" style={{ color: '#9b9b9b' }}>
+                  KraubexAI can make mistakes. Check important info.
+                </p>
+              </div>
+            </div>
           </div>
 
-          {/* Pre-prompts */}
-          <div className="flex gap-2 flex-wrap">
-            {prePrompts.map((prompt, i) => (
-              <button
-                key={i}
-                className="px-3 py-1 bg-gradient-to-r from-purple-100 to-blue-100 border border-purple-200 rounded-full text-xs text-purple-700 hover:bg-purple-200 transition-colors flex items-center gap-1"
-                onClick={() => setInput(prompt)}
-              >
-                <Sparkles className="w-3 h-3" /> {prompt}
-              </button>
-            ))}
-          </div>
+          {!isMaximized && (
+            <div
+              onMouseDown={(e) => {
+                setIsResizing({ active: true });
+                setResizeStart({
+                  x: e.clientX,
+                  y: e.clientY,
+                  width: size.width,
+                  height: size.height,
+                });
+              }}
+              className="absolute w-4 h-4 bottom-0 right-0 cursor-se-resize rounded-tl-sm transition-colors"
+              style={{ backgroundColor: '#c9c8bf' }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#b0afa5'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#c9c8bf'}
+            ></div>
+          )}
         </div>
-       </div>
-
-        <div className="flex gap-3">
-          <button
-            onClick={handleAskAI}
-            className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
-          >
-            <Send className="w-5 h-5" /> Ask Me
-          </button>
-          <button
-            onClick={handleClear}
-            className="px-6 py-3 bg-white border-2 border-purple-300 text-purple-700 rounded-lg hover:bg-purple-50 transition-colors font-medium"
-          >
-            Clear
-          </button>
-        </div>
-      </div>
-
-      {/* AI Suggestions */}
-      <div className="bg-white rounded-xl border-2 border-gray-300 p-6">
-        <h3 className="text-lg font-bold mb-4 flex items-center gap-2" style={{ color: COLORS.primary }}>
-          <Brain className="w-5 h-5" /> KraubexAI Recommendations
-        </h3>
-        <div className="space-y-3">
-          {[
-            'Top-rated steel suppliers in your region',
-            'Companies with recent positive reviews',
-            'Suppliers matching your budget range',
-            'New suppliers in your industry'
-          ].map((suggestion, i) => (
-            <button
-              key={i}
-              className="w-full text-left p-4 bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg hover:bg-purple-100 transition-colors flex items-center justify-between"
-            >
-              <span className="text-gray-800">{suggestion}</span>
-              <Sparkles className="w-4 h-4 text-purple-500" />
-            </button>
-          ))}
-        </div>
-      </div>
-
-    {/* AI Insights */}
-      <div className="bg-white rounded-xl border-2 border-gray-300 p-6">
-        <h3 className="text-lg font-bold mb-4 flex items-center gap-2" style={{color: COLORS.primary}}>
-            <Eye className="w-5 h-5" /> KraubexAI Insights
-        </h3>
-        <div className="space-y-4">
-          <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-gray-700"><strong>Trend Alert:</strong> Steel prices expected to decrease by 5% next quarter.</p>
-          </div>
-          <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-sm text-gray-700"><strong>Opportunity:</strong> 3 new certified suppliers match your requirements with competitive pricing.</p>
-          </div>
-        </div>
-      </div>
-     </div>
+      )}
+    </div>
   );
-};
-
-export default AISearchContent;
+}
