@@ -14,13 +14,14 @@ export default function AgentChatArea() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMinimized, setIsMinimized] = useState(false);
   const [isMaximized, setIsMaximized] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const [chats, setChats] = useState([
     { id: 1, name: "Chat with KraubexAI", messages: [] },
     { id: 2, name: "Supplier Data Query", messages: [] },
   ]);
 
   const [position, setPosition] = useState({ x: 100, y: 80 });
-  const [size, setSize] = useState({ width: 850, height: 650 });
+  const [size, setSize] = useState({ width: 850, height: 800 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [isResizing, setIsResizing] = useState({ active: false });
@@ -120,39 +121,50 @@ export default function AgentChatArea() {
 
   const activeChat = chats.find((c) => c.id === activeChatId);
 
+  if (!isVisible) return null;
+
   return (
     <div
-      className={`fixed shadow-2xl border border-gray-300 transition-all duration-300 ${
+      className={`fixed shadow-2xl border border-gray-300 transition-all duration-200 ${
         isMaximized ? "top-0 left-0 w-screen h-screen rounded-none" : "rounded-xl"
       }`}
       style={{
+        display: "flex",
+        flexDirection: "column",
         top: isMaximized ? 0 : position.y,
         left: isMaximized ? 0 : position.x,
-        width: isMaximized ? "100vw" : size.width,
-        height: isMaximized ? "100vh" : size.height,
+        width: isMaximized ? "100vw" : isMinimized ? 300 : size.width,
+        height: isMaximized ? "100vh" : isMinimized ? 150 : size.height,
         zIndex: 9999,
         backgroundColor: COLORS.background,
+        willChange: isDragging ? 'transform' : 'auto',
+        overflow: 'hidden',
+        cursor: isDragging ? 'grabbing' : 'auto',
+        border: "2px solid #c04000",  // <-- updated border color
       }}
     >
       <div
-        className="flex items-center justify-between px-4 py-3 cursor-move select-none"
+        className="flex items-center justify-between px-4 py-3 select-none"
+        onMouseDown={handleMouseDownMove}   // <-- move here
         style={{
           backgroundColor: COLORS.background,
           borderBottom: `4px solid ${COLORS.primary}`,
-          borderRadius: '12px 12px 0 0'
+          borderRadius: '12px 12px 0 0',
+          cursor: 'grab',
         }}
-        onMouseDown={handleMouseDownMove}
       >
         <span className="font-semibold flex items-center gap-2" style={{ color: COLORS.text }}>
           <div className="w-6 h-6 rounded flex items-center justify-center" style={{ background: `linear-gradient(to bottom right, ${COLORS.primary}, ${COLORS.orange})` }}>
-            {/*<Sparkles className="w-4 h-4 text-white" />*/}
             <img src={KraubexLogo} alt="Kraubex Logo" className="w-32 h-auto" />
           </div>
           KraubexAI
         </span>
         <div className="flex gap-1">
           <button
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsSidebarOpen(!isSidebarOpen);
+            }}
             title={isSidebarOpen ? "Hide Sidebar" : "Show Sidebar"}
             className="w-8 h-8 flex items-center justify-center rounded transition-colors"
             style={{ color: COLORS.text }}
@@ -162,7 +174,10 @@ export default function AgentChatArea() {
             <Menu className="w-4 h-4" />
           </button>
           <button
-            onClick={() => setIsMinimized(!isMinimized)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsMinimized(!isMinimized);
+            }}
             title="Minimize"
             className="w-8 h-8 flex items-center justify-center rounded transition-colors"
             style={{ color: COLORS.text }}
@@ -172,7 +187,10 @@ export default function AgentChatArea() {
             <Minimize2 className="w-4 h-4" />
           </button>
           <button
-            onClick={() => setIsMaximized(!isMaximized)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsMaximized(!isMaximized);
+            }}
             title="Maximize"
             className="w-8 h-8 flex items-center justify-center rounded transition-colors"
             style={{ color: COLORS.text }}
@@ -182,7 +200,10 @@ export default function AgentChatArea() {
             <Maximize2 className="w-4 h-4" />
           </button>
           <button
-            onClick={() => alert("Closing chat...")}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsVisible(false);
+            }}
             title="Close"
             className="w-8 h-8 flex items-center justify-center rounded transition-colors"
             style={{ color: COLORS.text }}
@@ -195,7 +216,10 @@ export default function AgentChatArea() {
       </div>
 
       {!isMinimized && (
-        <div className="flex h-full relative">
+        <div className="flex h-full relative flex-1 overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+              onMouseDown={(e) => e.stopPropagation()}
+        >
           <div
             className={`transition-all duration-300 ease-in-out ${
               isSidebarOpen ? "w-64 p-4 opacity-100" : "w-0 p-0 opacity-0"
@@ -276,11 +300,10 @@ export default function AgentChatArea() {
             </div>
           </div>
 
-          <div className="flex-1 flex flex-col" style={{ backgroundColor: COLORS.background }}>
+          <div className="flex-1 flex flex-col overflow-hidden" style={{ backgroundColor: COLORS.background }}>
             <div className="px-6 py-4 border-b border-gray-300">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 rounded flex items-center justify-center flex-shrink-0" style={{ background: `linear-gradient(to bottom right, ${COLORS.primary}, ${COLORS.orange})` }}>
-                  {/* <Sparkles className="w-5 h-5 text-white" /> */}
                   <img src={KraubexLogo} alt="Kraubex Logo" className="w-32 h-auto" />
                 </div>
                 <div>
@@ -290,11 +313,11 @@ export default function AgentChatArea() {
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-6 py-4">
+            <div className="flex-1 overflow-y-auto px-6 py-4 pb-32">
               {activeChat?.messages.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center px-4">
                   <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4" style={{ background: `linear-gradient(to bottom right, rgba(192, 64, 0, 0.1), rgba(192, 64, 0, 0.2))` }}>
-                    {/* <Sparkles className="w-8 h-8" style={{ color: COLORS.primary }} /> */}
+
                     <img src={KraubexLogo} alt="Kraubex Logo" className="w-32 h-auto" />
                   </div>
                   <h2 className="text-2xl font-semibold mb-2" style={{ color: COLORS.text }}>How can I help you today?</h2>
@@ -325,8 +348,7 @@ export default function AgentChatArea() {
                     <div key={msg.id} className="flex gap-4">
                       {msg.from === "ai" && (
                         <div className="w-8 h-8 rounded flex items-center justify-center flex-shrink-0" style={{ background: `linear-gradient(to bottom right, ${COLORS.primary}, ${COLORS.orange})` }}>
-                          <Spark
-                          les className="w-5 h-5 text-white" />
+                          <img src={KraubexLogo} alt="Kraubex Logo" className="w-32 h-auto" />
                         </div>
                       )}
                       <div className={`flex-1 ${msg.from === "user" ? "ml-auto max-w-xl" : ""}`}>
@@ -336,7 +358,7 @@ export default function AgentChatArea() {
                       </div>
                       {msg.from === "user" && (
                         <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium flex-shrink-0" style={{ backgroundColor: COLORS.primary }}>
-                          You
+                          U
                         </div>
                       )}
                     </div>
@@ -345,7 +367,8 @@ export default function AgentChatArea() {
                   {isTyping && (
                     <div className="flex gap-4">
                       <div className="w-8 h-8 rounded flex items-center justify-center flex-shrink-0" style={{ background: `linear-gradient(to bottom right, ${COLORS.primary}, ${COLORS.orange})` }}>
-                        <Sparkles className="w-5 h-5 text-white" />
+
+                        <img src={KraubexLogo} alt="Kraubex Logo" className="w-32 h-auto" />
                       </div>
                       <div className="flex-1">
                         <div className="flex gap-1 items-center">
@@ -361,7 +384,7 @@ export default function AgentChatArea() {
               )}
             </div>
 
-            <div className="border-t border-gray-300 p-4">
+            <div className="border-t border-black-300 p-4 mt-2">
               <div className="max-w-3xl mx-auto">
                 <div className="rounded-xl border border-gray-300 transition-all" style={{ backgroundColor: COLORS.background }}>
                   <textarea
@@ -431,7 +454,8 @@ export default function AgentChatArea() {
                 </div>
 
                 <p className="text-xs text-center mt-2" style={{ color: '#9b9b9b' }}>
-                  KraubexAI can make mistakes. Check important info.
+
+                  © {new Date().getFullYear()} KraubexAI
                 </p>
               </div>
             </div>

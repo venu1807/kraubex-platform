@@ -33,6 +33,7 @@ import RFQManagement from "../components/RFQManagement"
 import InventoryManagement from "../components/InventoryManagement"
 import AISearchManagement from "../components/AISearchManagement"
 import SupplierContractManagement from "../components/SupplierContractManagement"
+import AgenticSearchManagement from "../components/AgenticSearchManagement"
 
 
 const AppointmentCalendarContent = () => {
@@ -2550,7 +2551,7 @@ export default function KraubexSidebar() {
 
             {/* AI Chat Overlay - Only show in agentic mode */}
             {currentMode === "agentic" && (
-              <AISearchManagement
+              <AgenticSearchManagement
                   dashboardData={{ type: "Overview Dashboard" }}
                   onClose={() => {
                     console.log("Parent onClose called");
