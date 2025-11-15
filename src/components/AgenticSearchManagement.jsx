@@ -174,9 +174,11 @@ export default function AgentChatArea() {
             <Menu className="w-4 h-4" />
           </button>
           <button
+
             onClick={(e) => {
               e.stopPropagation();
-              setIsMinimized(!isMinimized);
+              setIsMinimized((prev) => !prev);  // toggle minimized
+              setIsMaximized(false);            // ensure maximize turns off
             }}
             title="Minimize"
             className="w-8 h-8 flex items-center justify-center rounded transition-colors"
@@ -184,12 +186,16 @@ export default function AgentChatArea() {
             onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d9d8d0'}
             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
           >
-            <Minimize2 className="w-4 h-4" />
+            { /* <Minimize2 className="w-4 h-4" /> */}
+
+            <div className="w-3 h-0.5 bg-current rounded"></div>
           </button>
           <button
+
             onClick={(e) => {
               e.stopPropagation();
-              setIsMaximized(!isMaximized);
+              setIsMaximized((prev) => !prev);  // toggle maximized
+              setIsMinimized(false);            // ensure minimize turns off
             }}
             title="Maximize"
             className="w-8 h-8 flex items-center justify-center rounded transition-colors"
@@ -197,7 +203,8 @@ export default function AgentChatArea() {
             onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#d9d8d0'}
             onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
           >
-            <Maximize2 className="w-4 h-4" />
+            { /* <Maximize2 className="w-4 h-4" /> */}
+            <div className="w-3 h-3 border border-current rounded-sm"></div>
           </button>
           <button
             onClick={(e) => {

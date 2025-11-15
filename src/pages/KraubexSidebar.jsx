@@ -2551,7 +2551,7 @@ export default function KraubexSidebar() {
 
             {/* AI Chat Overlay - Only show in agentic mode */}
             {currentMode === "agentic" && (
-              <AgenticSearchManagement
+              <AISearchManagement
                   dashboardData={{ type: "Overview Dashboard" }}
                   onClose={() => {
                     console.log("Parent onClose called");
